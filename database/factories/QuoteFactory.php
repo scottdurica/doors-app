@@ -1,34 +1,28 @@
 <?php
 
 namespace Database\Factories;
-use Illuminate\Support\Arr;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MainForm>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Quote>
  */
-class MainFormFactory extends Factory
+class QuoteFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-
-
-
-
     public function definition(): array
     {
-
-
-    $rs = [2.0,2.25,3.0,3.5];
+$rs = [2.0,2.25,3.0,3.5];
     $sizes = [10,10.5,12,12.5,14,14.5,15,15.25,28.25,18.75,23.125,12.375,24.5];
     $types = ['door','glass','glass - 2lite','glass - 4lite' ];
 
     $doors = [];
 
-    for ($i=0; $i<rand(1,3); $i++) {
+    for ($i=0; $i<rand(1,5); $i++) {
         $door = [
             'quantity' => rand(1,4),
             'width' => Arr::random($sizes),

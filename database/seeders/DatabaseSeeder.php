@@ -8,6 +8,7 @@ use App\Models\User;
 
 use App\Models\MainForm;
 use Illuminate\Database\Seeder;
+use Database\Seeders\QuoteTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,8 +17,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //User::factory(8)->create();
-        MainForm::factory(30)->create();
+
+        User::factory(10)->create();
+
+        // $this->call([
+        //     QuoteTableSeeder::class,
+        // ]);
+        
 
     }
 }
