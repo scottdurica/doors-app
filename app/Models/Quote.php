@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Carbon\Carbon;
 class Quote extends Model
     {
         /** @use HasFactory<\Database\Factories\QuoteFactory> */
@@ -18,4 +18,12 @@ class Quote extends Model
         protected $casts = [
                 'doors' => 'array',
             ];
+
+        protected $appends = [
+            'readable_date',
+        ];
+
+        public function getReadableDateAttribute() {
+            return $this->created_at->format('m-d-Y');
+        }
     }
