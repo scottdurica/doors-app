@@ -1,21 +1,23 @@
-import React from 'react'
+import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link } from "@inertiajs/react";
+import CreateQuoteForm from "./Partials/CreateQuoteForm";
 
 const Create = () => {
-  return (
-            <AuthenticatedLayout
+    return (
+        <AuthenticatedLayout
             header={
                 <div className="flex justify-between ">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        My Quotes
+                        New Quote
                     </h2>
-                    <Link href="quotes/create" className= 'underline font-bold '> Start New Quote</Link>
                 </div>
             }
         >
             <Head title="New Quote" />
-            <CreateQuoteForm ></CreateQuoteForm>
+            <CreateQuoteForm></CreateQuoteForm>
         </AuthenticatedLayout>
-  )
-}
+    );
+};
 
-export default Create
+export default Create;
