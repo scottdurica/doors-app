@@ -18,10 +18,10 @@ const CreateQuoteForm = () => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            General Information
+                            General
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Enter quote type and name
+                            Enter your name and quote type.
                         </p>
                     </div>
 
@@ -59,8 +59,17 @@ const CreateQuoteForm = () => {
                         </div>
                         <div className="sm:col-span-4">
                             <LabelWithHintRight
-                                value="Company"
+                                value="Job Name/PO"
                                 hint="Required"
+                                name="po_number"
+                                id="po_number"
+                                type="text"
+                                placeholder=""
+                                className="text-xs"
+                            />
+                            <LabelWithHintRight
+                                value="Company Name"
+                                hint="Optional"
                                 name="company"
                                 id="company"
                                 type="text"
@@ -91,10 +100,10 @@ const CreateQuoteForm = () => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            Shipping Information
+                            Shipping Details
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Who are you and where is this stuff going?
+                            Choose how to receive your doors.
                         </p>
                     </div>
 
@@ -214,10 +223,10 @@ const CreateQuoteForm = () => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            Personal Information
+                            Door Details
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Use a permanent address where you can receive mail.
+                            Set general door deatials here.
                         </p>
                     </div>
 
