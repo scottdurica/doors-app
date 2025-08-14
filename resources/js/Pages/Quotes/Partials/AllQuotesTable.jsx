@@ -16,7 +16,7 @@ const AllQuotesTable = ({ quotes }) => {
                             Door Style
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Type
+                            Finish
                         </th>
                     </tr>
                 </thead>
@@ -34,7 +34,7 @@ const AllQuotesTable = ({ quotes }) => {
                             </th>
                             <td className="px-6 py-4">{quote.po_number}</td>
                             <td className="px-6 py-4">{quote.style}</td>
-                            <td className="px-6 py-4">{quote.style}</td>
+                            <td className="px-6 py-4">{quote.finish}</td>
                         </tr>
                     ))}
                 </tbody>

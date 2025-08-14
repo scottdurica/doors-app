@@ -20,4 +20,8 @@ class QuoteController extends Controller
                 'quotes' => $quotes
             ]);
         }
+
+        public function create() {
+            return Inertia::render('Quotes/Create');
+        }
     }

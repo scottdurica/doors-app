@@ -1,11 +1,8 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import React from "react";
-import { Head, Link } from "@inertiajs/react";
-import AllQuotesTable from "./Partials/AllQuotesTable";
+import React from 'react'
 
-const All = ({ quotes }) => {
-    return (
-        <AuthenticatedLayout
+const Create = () => {
+  return (
+            <AuthenticatedLayout
             header={
                 <div className="flex justify-between ">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
@@ -15,10 +12,10 @@ const All = ({ quotes }) => {
                 </div>
             }
         >
-            <Head title="Quotes" />
-            <AllQuotesTable quotes={quotes}></AllQuotesTable>
+            <Head title="New Quote" />
+            <CreateQuoteForm ></CreateQuoteForm>
         </AuthenticatedLayout>
-    );
-};
+  )
+}
 
-export default All;
+export default Create

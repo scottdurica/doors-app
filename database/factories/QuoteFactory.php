@@ -39,7 +39,8 @@ $rs = [2.0,2.25,3.0,3.5];
         //dd($doors);
 
         return [
-            'user_id' => rand(1,10),
+            //'user_id' => rand(9,11),
+            'user_id' => 11,
             'quote_type' => Arr::random([0,1]),
             'delivery_option' => Arr::random(['pickup', 'ship', 'delivery']),
             'c_name' => $this->faker->company(),
