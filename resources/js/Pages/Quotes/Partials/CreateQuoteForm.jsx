@@ -3,16 +3,20 @@ import { useState } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 
-const CreateQuoteForm = () => {
+const CreateQuoteForm = ({user}) => {
     const quoteTypes = [
         { id: "quote", title: "Quote" },
         { id: "order", title: "Order" },
     ];
 
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
+    const [isAddressGood, setIsAddressGood] = useState(true);
 
+
+    
     return (
         <form>
+            
             <div className="space-y-4 mt-36 p-12">
                 {/* General Information */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
@@ -96,7 +100,7 @@ const CreateQuoteForm = () => {
                     </div>
                 </div>
 
-                {/* General Information */}
+                {/* Shipping Information */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
@@ -114,26 +118,6 @@ const CreateQuoteForm = () => {
                                     Select a delivery option
                                 </p>
                                 <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="pickup"
-                                            name="shipoptions"
-                                            type="radio"
-                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                            checked={
-                                                pickupOptionVal === "pickup"
-                                            }
-                                            onChange={(e) =>
-                                                setPickupOptionVal("pickup")
-                                            }
-                                        />
-                                        <label
-                                            htmlFor="pickup"
-                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                        >
-                                            Local Pickup
-                                        </label>
-                                    </div>
                                     <div className="flex items-center">
                                         <input
                                             id="ship"
@@ -172,49 +156,123 @@ const CreateQuoteForm = () => {
                                             Deliver
                                         </label>
                                     </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="pickup"
+                                            name="shipoptions"
+                                            type="radio"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            checked={
+                                                pickupOptionVal === "pickup"
+                                            }
+                                            onChange={(e) =>
+                                                setPickupOptionVal("pickup")
+                                            }
+                                        />
+                                        <label
+                                            htmlFor="pickup"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                        >
+                                            Local Pickup
+                                        </label>
+                                    </div>
                                 </div>
                             </fieldset>
                         </div>
                         {pickupOptionVal === "pickup" && (
                             <div className="sm:col-span-4">
-                                <AddressCard></AddressCard>
+                                <AddressCard title='Pickup Location' content='50 Grandview Road, Bow NH 03304'></AddressCard>
                             </div>
                         )}
-                        {pickupOptionVal !== "pickup" && (
-                            <div className="sm:col-span-4">
-                                <LabelWithHintRight
-                                    value="Ship To Name"
-                                    hint="Required"
-                                    name="shiptoname"
-                                    id="shiptoname"
-                                    type="text"
-                                    placeholder=""
-                                />
-                                <LabelWithHintRight
-                                    value="Last Name"
-                                    hint="Required"
-                                    name="lname"
-                                    id="lname"
-                                    type="text"
-                                    placeholder=""
-                                />
-                                <LabelWithHintRight
-                                    value="Ship To Address"
-                                    hint="Required"
-                                    name="street"
-                                    id="street"
-                                    type="text"
-                                    placeholder=""
-                                />
-                                <LabelWithHintRight
-                                    value="City"
-                                    hint="Required"
-                                    name="city"
-                                    id="city"
-                                    type="text"
-                                    placeholder=""
-                                />
+                        {pickupOptionVal !== "pickup" && isAddressGood === true && (
+                            <> 
+                                <div className="sm:col-span-4">
+                                    <AddressCard title='Ship To' content={`${user.street}, ${user.city} ${user.state} ${user.zip}`}></AddressCard>
+                                </div>
+                                <div className="sm:col-span-4">
+                                <fieldset>
+                                    <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                        <div className="flex items-center">
+                                            <input
+                                                id="good"
+                                                name="addressoptions"
+                                                type="radio"
+                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                                checked={
+                                                    isAddressGood === true
+                                                }
+                                                onChange={(e) =>
+                                                    setIsAddressGood(true)
+                                                }
+                                            />
+                                            <label
+                                                htmlFor="good"
+                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                            >
+                                                This address is correct
+                                            </label>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <input
+                                                id="setnewaddress"
+                                                name="addressoptions"
+                                                type="radio"
+                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                                checked={isAddressGood === false}
+                                                onChange={(e) =>
+                                                    setIsAddressGood(false)
+                                                }
+                                            />
+                                            <label
+                                                htmlFor="setnewaddress"
+                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                            >
+                                                Ship them somewhere else
+                                            </label>
+                                        </div>
+        
+                                    </div>
+                            </fieldset>
                             </div>
+                            </>
+                        )}
+                        {pickupOptionVal !== "pickup" && isAddressGood === false && (
+                            
+                                <div className="sm:col-span-4">
+                                    <LabelWithHintRight
+                                        value="Ship To Name"
+                                        hint="Required"
+                                        name="shiptoname"
+                                        id="shiptoname"
+                                        type="text"
+                                        placeholder=""
+                                    />
+                                    <LabelWithHintRight
+                                        value="Last Name"
+                                        hint="Required"
+                                        name="lname"
+                                        id="lname"
+                                        type="text"
+                                        placeholder=""
+                                        />
+                                    <LabelWithHintRight
+                                        value="Ship To Address"
+                                        hint="Required"
+                                        name="street"
+                                        id="street"
+                                        type="text"
+                                        placeholder=""
+                                    />
+                                    <LabelWithHintRight
+                                        value="City"
+                                        hint="Required"
+                                        name="city"
+                                        id="city"
+                                        type="text"
+                                        placeholder=""
+                                    />
+                                </div>
+                            
                         )}
                     </div>
                 </div>

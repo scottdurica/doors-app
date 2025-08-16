@@ -22,6 +22,8 @@ class QuoteController extends Controller
         }
 
         public function create() {
-            return Inertia::render('Quotes/Create');
+            return Inertia::render('Quotes/Create', [
+                'user' => Auth::user()
+            ]);
         }
     }
