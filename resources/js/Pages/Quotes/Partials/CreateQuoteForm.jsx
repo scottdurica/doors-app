@@ -3,7 +3,34 @@ import { useState } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 
-const CreateQuoteForm = ({user}) => {
+import {
+    Label,
+    Listbox,
+    ListboxButton,
+    ListboxOption,
+    ListboxOptions,
+} from "@headlessui/react";
+import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
+import { CheckIcon } from "@heroicons/react/20/solid";
+
+const doorTypes = [
+    { id: 1, name: "Shaker", doorCode: "S-001" },
+    { id: 2, name: "Slim Shaker", doorCode: "S-002" },
+    { id: 3, name: "Tacoma", doorCode: "S-003" },
+    { id: 4, name: "RP-120", doorCode: "S-004" },
+    { id: 5, name: "Ogee", doorCode: "S-010" },
+    { id: 6, name: "Beaded", doorCode: "S-012" },
+    { id: 7, name: "Beveled", doorCode: "S-014" },
+    { id: 8, name: "Drop Bead", doorCode: "S-020" },
+    { id: 9, name: "Denver", doorCode: "S-054" },
+    { id: 10, name: "Racine", doorCode: "S-53" },
+];
+const constructionTypes = [
+    { id: 1, name: "One Piece", description: "HDF" },
+    { id: 2, name: "Five Piece", description: "C&S" },
+];
+
+const CreateQuoteForm = ({ user }) => {
     const quoteTypes = [
         { id: "quote", title: "Quote" },
         { id: "order", title: "Order" },
@@ -11,12 +38,12 @@ const CreateQuoteForm = ({user}) => {
 
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
     const [isAddressGood, setIsAddressGood] = useState(true);
+    const [selectedDoorType, setSelectedDoorType] = useState(doorTypes);
+    const [selectedConstructionType, setSelectedConstructionType] =
+        useState(constructionTypes);
 
-
-    
     return (
         <form>
-            
             <div className="space-y-4 mt-36 p-12">
                 {/* General Information */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
@@ -181,63 +208,81 @@ const CreateQuoteForm = ({user}) => {
                         </div>
                         {pickupOptionVal === "pickup" && (
                             <div className="sm:col-span-4">
-                                <AddressCard title='Pickup Location' content='50 Grandview Road, Bow NH 03304'></AddressCard>
+                                <AddressCard
+                                    title="Pickup from:"
+                                    content="50 Grandview Road, Bow NH 03304"
+                                ></AddressCard>
                             </div>
                         )}
-                        {pickupOptionVal !== "pickup" && isAddressGood === true && (
-                            <> 
-                                <div className="sm:col-span-4">
-                                    <AddressCard title='Ship To' content={`${user.street}, ${user.city} ${user.state} ${user.zip}`}></AddressCard>
-                                </div>
-                                <div className="sm:col-span-4">
-                                <fieldset>
-                                    <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                                        <div className="flex items-center">
-                                            <input
-                                                id="good"
-                                                name="addressoptions"
-                                                type="radio"
-                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                                checked={
-                                                    isAddressGood === true
-                                                }
-                                                onChange={(e) =>
-                                                    setIsAddressGood(true)
-                                                }
-                                            />
-                                            <label
-                                                htmlFor="good"
-                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                            >
-                                                This address is correct
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <input
-                                                id="setnewaddress"
-                                                name="addressoptions"
-                                                type="radio"
-                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                                checked={isAddressGood === false}
-                                                onChange={(e) =>
-                                                    setIsAddressGood(false)
-                                                }
-                                            />
-                                            <label
-                                                htmlFor="setnewaddress"
-                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                            >
-                                                Ship them somewhere else
-                                            </label>
-                                        </div>
-        
+                        {pickupOptionVal !== "pickup" &&
+                            isAddressGood === true && (
+                                <>
+                                    <div className="sm:col-span-4">
+                                        <AddressCard
+                                            title={
+                                                pickupOptionVal === "ship"
+                                                    ? "Ship to:"
+                                                    : "Deliver to:"
+                                            }
+                                            content={`${user.street}, ${user.city} ${user.state} ${user.zip}`}
+                                        ></AddressCard>
                                     </div>
-                            </fieldset>
-                            </div>
-                            </>
-                        )}
-                        {pickupOptionVal !== "pickup" && isAddressGood === false && (
-                            
+                                    <div className="sm:col-span-4">
+                                        <fieldset>
+                                            <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                                <div className="flex items-center">
+                                                    <input
+                                                        id="good"
+                                                        name="addressoptions"
+                                                        type="radio"
+                                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                                        checked={
+                                                            isAddressGood ===
+                                                            true
+                                                        }
+                                                        onChange={(e) =>
+                                                            setIsAddressGood(
+                                                                true
+                                                            )
+                                                        }
+                                                    />
+                                                    <label
+                                                        htmlFor="good"
+                                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                                    >
+                                                        This address is correct
+                                                    </label>
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <input
+                                                        id="setnewaddress"
+                                                        name="addressoptions"
+                                                        type="radio"
+                                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                                        checked={
+                                                            isAddressGood ===
+                                                            false
+                                                        }
+                                                        onChange={(e) =>
+                                                            setIsAddressGood(
+                                                                false
+                                                            )
+                                                        }
+                                                    />
+                                                    <label
+                                                        htmlFor="setnewaddress"
+                                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                                    >
+                                                        Ship them somewhere else
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </>
+                            )}
+                        {pickupOptionVal !== "pickup" &&
+                            isAddressGood === false && (
                                 <div className="sm:col-span-4">
                                     <LabelWithHintRight
                                         value="Ship To Name"
@@ -254,7 +299,7 @@ const CreateQuoteForm = ({user}) => {
                                         id="lname"
                                         type="text"
                                         placeholder=""
-                                        />
+                                    />
                                     <LabelWithHintRight
                                         value="Ship To Address"
                                         hint="Required"
@@ -272,8 +317,7 @@ const CreateQuoteForm = ({user}) => {
                                         placeholder=""
                                     />
                                 </div>
-                            
-                        )}
+                            )}
                     </div>
                 </div>
 
@@ -323,23 +367,127 @@ const CreateQuoteForm = ({user}) => {
                                 />
                             </div>
                         </div>
-
+                        {/* Construction type selectbox */}
                         <div className="sm:col-span-4">
-                            <label
-                                htmlFor="email"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                            <Listbox
+                                value={selectedConstructionType}
+                                onChange={setSelectedConstructionType}
                             >
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
+                                <Label className="block text-sm/6 font-medium text-gray-900">
+                                    COnstruction Type
+                                </Label>
+                                <div className="relative mt-2">
+                                    <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
+                                        <span className="col-start-1 row-start-1 flex w-full gap-2 pr-6">
+                                            <span className="truncate">
+                                                {selectedConstructionType.name}
+                                            </span>
+                                            <span className="truncate text-gray-500">
+                                                {
+                                                    selectedConstructionType.description
+                                                }
+                                            </span>
+                                        </span>
+                                        <ChevronUpDownIcon
+                                            aria-hidden="true"
+                                            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                                        />
+                                    </ListboxButton>
+
+                                    <ListboxOptions
+                                        transition
+                                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                                    >
+                                        {constructionTypes.map(
+                                            (constructionType) => (
+                                                <ListboxOption
+                                                    key={
+                                                        constructionType.description
+                                                    }
+                                                    value={constructionType}
+                                                    className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                                                >
+                                                    <div className="flex">
+                                                        <span className="truncate font-normal group-data-selected:font-semibold">
+                                                            {
+                                                                constructionType.name
+                                                            }
+                                                        </span>
+                                                        <span className="ml-2 truncate text-gray-500 group-data-focus:text-indigo-200">
+                                                            {
+                                                                constructionType.description
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                                                        <CheckIcon
+                                                            aria-hidden="true"
+                                                            className="size-5"
+                                                        />
+                                                    </span>
+                                                </ListboxOption>
+                                            )
+                                        )}
+                                    </ListboxOptions>
+                                </div>
+                            </Listbox>
+                        </div>
+                        {/* Door style selectbox */}
+                        <div className="sm:col-span-4">
+                            <Listbox
+                                value={selectedDoorType}
+                                onChange={setSelectedDoorType}
+                            >
+                                <Label className="block text-sm/6 font-medium text-gray-900">
+                                    Door style
+                                </Label>
+                                <div className="relative mt-2">
+                                    <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
+                                        <span className="col-start-1 row-start-1 flex w-full gap-2 pr-6">
+                                            <span className="truncate">
+                                                {selectedDoorType.name}
+                                            </span>
+                                            <span className="truncate text-gray-500">
+                                                {selectedDoorType.doorCode}
+                                            </span>
+                                        </span>
+                                        <ChevronUpDownIcon
+                                            aria-hidden="true"
+                                            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                                        />
+                                    </ListboxButton>
+
+                                    <ListboxOptions
+                                        transition
+                                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                                    >
+                                        {doorTypes.map((doorType) => (
+                                            <ListboxOption
+                                                key={doorType.doorCode}
+                                                value={doorType}
+                                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                                            >
+                                                <div className="flex">
+                                                    <span className="truncate font-normal group-data-selected:font-semibold">
+                                                        {doorType.name}
+                                                    </span>
+                                                    <span className="ml-2 truncate text-gray-500 group-data-focus:text-indigo-200">
+                                                        {doorType.doorCode}
+                                                    </span>
+                                                </div>
+
+                                                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                                                    <CheckIcon
+                                                        aria-hidden="true"
+                                                        className="size-5"
+                                                    />
+                                                </span>
+                                            </ListboxOption>
+                                        ))}
+                                    </ListboxOptions>
+                                </div>
+                            </Listbox>
                         </div>
 
                         <div className="sm:col-span-3">
