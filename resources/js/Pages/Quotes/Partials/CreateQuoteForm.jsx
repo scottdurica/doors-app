@@ -3,31 +3,114 @@ import { useState } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 
-import {
-    Label,
-    Listbox,
-    ListboxButton,
-    ListboxOption,
-    ListboxOptions,
-} from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
-import { CheckIcon } from "@heroicons/react/20/solid";
-
-const doorTypes = [
-    { id: 1, name: "Shaker", doorCode: "S-001" },
-    { id: 2, name: "Slim Shaker", doorCode: "S-002" },
-    { id: 3, name: "Tacoma", doorCode: "S-003" },
-    { id: 4, name: "RP-120", doorCode: "S-004" },
-    { id: 5, name: "Ogee", doorCode: "S-010" },
-    { id: 6, name: "Beaded", doorCode: "S-012" },
-    { id: 7, name: "Beveled", doorCode: "S-014" },
-    { id: 8, name: "Drop Bead", doorCode: "S-020" },
-    { id: 9, name: "Denver", doorCode: "S-054" },
-    { id: 10, name: "Racine", doorCode: "S-53" },
+const onePieceDoorTypes = [
+    {
+        name: "Shaker",
+        official: "S-001",
+        imgPath: "/images/Shaker.png",
+    },
+    {
+        name: "Beveled Shaker",
+        official: "S-002",
+        imgPath: "/images/Bevel-shaker.png",
+    },
+    {
+        name: "Double Shaker",
+        official: "S-003",
+        imgPath: "/images/Dbl-shaker.png",
+    },
+    {
+        name: "Slim Shaker",
+        official: "S-004",
+        imgPath: "/images/Slim-shaker.png",
+    },
+    {
+        name: "Skinny 150V",
+        official: "S-005",
+        imgPath: "/images/Skinny-150v.png",
+    },
+    {
+        name: "Skinny Bead 125",
+        official: "S-006",
+        imgPath: "/images/Skinny-Bead-125.png",
+    },
+    {
+        name: "Inside Bead 125",
+        official: "S-008",
+        imgPath: "/images/Inside-Bead.png",
+    },
+    {
+        name: "Step Bead 250",
+        official: "S-009",
+        imgPath: "/images/Step-bead.png",
+    },
+    {
+        name: "Step Bead RP",
+        official: "S-010",
+        imgPath: "/images/Step-bead-rp.png",
+    },
+    {
+        name: "Lima",
+        official: "S-032",
+        imgPath: "/images/Lima.png",
+    },
+    {
+        name: "Tacoma",
+        official: "S-033",
+        imgPath: "/images/Tacoma.png",
+    },
+    {
+        name: "Denver",
+        official: "S-034",
+        imgPath: "/images/Denver.png",
+    },
+    {
+        name: "Auburn",
+        official: "S-035",
+        imgPath: "/images/Auburn.png",
+    },
+    {
+        name: "Racine",
+        official: "S-061",
+        imgPath: "/images/Racine.png",
+    },
+    {
+        name: "Madison",
+        official: "S-063",
+        imgPath: "/images/Madison.png",
+    },
+    {
+        name: "Franklin",
+        official: "S-081",
+        imgPath: "/images/Franklin.png",
+    },
 ];
-const constructionTypes = [
-    { id: 1, name: "One Piece", description: "HDF" },
-    { id: 2, name: "Five Piece", description: "C&S" },
+const fivePieceDoorTypes = [
+    {
+        name: "Shaker-5PC",
+        official: "S-001",
+        imgPath: "/images/Shaker.png",
+    },
+    {
+        name: "Beveled Shaker-5PC",
+        official: "S-002",
+        imgPath: "/images/Bevel-shaker.png",
+    },
+    {
+        name: "Double Shaker-5PC",
+        official: "S-003",
+        imgPath: "/images/Dbl-shaker.png",
+    },
+];
+
+const woodTypesForOnePiece = [{ name: "MDF" }];
+const woodTypesForFivePiece = [
+    { name: "MDF" },
+    { name: "Maple" },
+    { name: "White Oak" },
+    { name: "Red Oak" },
+    { name: "Hickory" },
+    { name: "Cherry" },
 ];
 
 const CreateQuoteForm = ({ user }) => {
@@ -38,13 +121,100 @@ const CreateQuoteForm = ({ user }) => {
 
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
     const [isAddressGood, setIsAddressGood] = useState(true);
-    const [selectedDoorType, setSelectedDoorType] = useState(doorTypes);
+    const [selectedDoorType, setSelectedDoorType] = useState(
+        onePieceDoorTypes[0].name
+    );
     const [selectedConstructionType, setSelectedConstructionType] =
-        useState(constructionTypes);
+        useState("One Piece");
+    const [doorStyleImgPath, setDoorStyleImgPath] = useState(
+        onePieceDoorTypes[0].imgPath
+    );
+    const [doorList, setDoorList] = useState(onePieceDoorTypes);
+    const [woodType, setWoodType] = useState("MDF");
+    const [woodTypeList, setWoodTypeList] = useState(woodTypesForOnePiece);
+    const handleDoorStyleChange = (e) => {
+        const style = e.target.value;
+        switch (style) {
+            case onePieceDoorTypes[0].name:
+                setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+                break;
+            case onePieceDoorTypes[1].name:
+                setDoorStyleImgPath(onePieceDoorTypes[1].imgPath);
+                break;
+            case onePieceDoorTypes[2].name:
+                setDoorStyleImgPath(onePieceDoorTypes[2].imgPath);
+                break;
+            case onePieceDoorTypes[3].name:
+                setDoorStyleImgPath(onePieceDoorTypes[3].imgPath);
+                break;
+            case onePieceDoorTypes[4].name:
+                setDoorStyleImgPath(onePieceDoorTypes[4].imgPath);
+                break;
+            case onePieceDoorTypes[5].name:
+                setDoorStyleImgPath(onePieceDoorTypes[5].imgPath);
+                break;
+            case onePieceDoorTypes[6].name:
+                setDoorStyleImgPath(onePieceDoorTypes[6].imgPath);
+                break;
+            case onePieceDoorTypes[7].name:
+                setDoorStyleImgPath(onePieceDoorTypes[7].imgPath);
+                break;
+            case onePieceDoorTypes[8].name:
+                setDoorStyleImgPath(onePieceDoorTypes[8].imgPath);
+                break;
+            case onePieceDoorTypes[9].name:
+                setDoorStyleImgPath(onePieceDoorTypes[9].imgPath);
+                break;
+            case onePieceDoorTypes[10].name:
+                setDoorStyleImgPath(onePieceDoorTypes[10].imgPath);
+                break;
+            case onePieceDoorTypes[11].name:
+                setDoorStyleImgPath(onePieceDoorTypes[11].imgPath);
+                break;
+            case onePieceDoorTypes[12].name:
+                setDoorStyleImgPath(onePieceDoorTypes[12].imgPath);
+                break;
+            case onePieceDoorTypes[13].name:
+                setDoorStyleImgPath(onePieceDoorTypes[13].imgPath);
+                break;
+            case onePieceDoorTypes[14].name:
+                setDoorStyleImgPath(onePieceDoorTypes[14].imgPath);
+                break;
+            case onePieceDoorTypes[15].name:
+                setDoorStyleImgPath(onePieceDoorTypes[15].imgPath);
+                break;
+            case fivePieceDoorTypes[0].name:
+                setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+                break;
+            case fivePieceDoorTypes[1].name:
+                setDoorStyleImgPath(fivePieceDoorTypes[1].imgPath);
+                break;
+            case fivePieceDoorTypes[2].name:
+                setDoorStyleImgPath(fivePieceDoorTypes[2].imgPath);
+                break;
+            default:
+                console.log(console.error);
+        }
+    };
+    const handleConstructionTypeChange = (e) => {
+        setSelectedConstructionType(e.target.value);
+        if (e.target.value === "One Piece") {
+            setDoorList(onePieceDoorTypes);
+            setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+            setWoodTypeList(woodTypesForOnePiece);
+        } else {
+            setDoorList(fivePieceDoorTypes);
+            setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+            setWoodTypeList(woodTypesForFivePiece);
+        }
+    };
+    const handleWoodTypeChange = (e) => {
+        setWoodType(e.target.value);
+    };
 
     return (
         <form>
-            <div className="space-y-4 mt-36 p-12">
+            <div className="space-y-4 mt-8 p-12">
                 {/* General Information */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
@@ -52,7 +222,7 @@ const CreateQuoteForm = ({ user }) => {
                             General
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Enter your name and quote type.
+                            Enter a PO/Job and quote type.
                         </p>
                     </div>
 
@@ -97,31 +267,6 @@ const CreateQuoteForm = ({ user }) => {
                                 type="text"
                                 placeholder=""
                                 className="text-xs"
-                            />
-                            <LabelWithHintRight
-                                value="Company Name"
-                                hint="Optional"
-                                name="company"
-                                id="company"
-                                type="text"
-                                placeholder=""
-                                className="text-xs"
-                            />
-                            <LabelWithHintRight
-                                value="First Name"
-                                hint="Required"
-                                name="fname"
-                                id="fname"
-                                type="text"
-                                placeholder=""
-                            />
-                            <LabelWithHintRight
-                                value="Last Name"
-                                hint="Required"
-                                name="lname"
-                                id="lname"
-                                type="text"
-                                placeholder=""
                             />
                         </div>
                     </div>
@@ -328,264 +473,96 @@ const CreateQuoteForm = ({ user }) => {
                             Door Details
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Set general door deatials here.
+                            Set general door details here.
                         </p>
                     </div>
 
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="first-name"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                First name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="first-name"
-                                    name="first-name"
-                                    type="text"
-                                    autoComplete="given-name"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
-                        <div className="sm:col-span-3">
-                            <label
-                                htmlFor="last-name"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                Last name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="last-name"
-                                    name="last-name"
-                                    type="text"
-                                    autoComplete="family-name"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
                         {/* Construction type selectbox */}
                         <div className="sm:col-span-4">
-                            <Listbox
-                                value={selectedConstructionType}
-                                onChange={setSelectedConstructionType}
-                            >
-                                <Label className="block text-sm/6 font-medium text-gray-900">
-                                    COnstruction Type
-                                </Label>
-                                <div className="relative mt-2">
-                                    <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
-                                        <span className="col-start-1 row-start-1 flex w-full gap-2 pr-6">
-                                            <span className="truncate">
-                                                {selectedConstructionType.name}
-                                            </span>
-                                            <span className="truncate text-gray-500">
-                                                {
-                                                    selectedConstructionType.description
-                                                }
-                                            </span>
-                                        </span>
-                                        <ChevronUpDownIcon
-                                            aria-hidden="true"
-                                            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                                        />
-                                    </ListboxButton>
-
-                                    <ListboxOptions
-                                        transition
-                                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                                    >
-                                        {constructionTypes.map(
-                                            (constructionType) => (
-                                                <ListboxOption
-                                                    key={
-                                                        constructionType.description
-                                                    }
-                                                    value={constructionType}
-                                                    className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
-                                                >
-                                                    <div className="flex">
-                                                        <span className="truncate font-normal group-data-selected:font-semibold">
-                                                            {
-                                                                constructionType.name
-                                                            }
-                                                        </span>
-                                                        <span className="ml-2 truncate text-gray-500 group-data-focus:text-indigo-200">
-                                                            {
-                                                                constructionType.description
-                                                            }
-                                                        </span>
-                                                    </div>
-
-                                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                                                        <CheckIcon
-                                                            aria-hidden="true"
-                                                            className="size-5"
-                                                        />
-                                                    </span>
-                                                </ListboxOption>
-                                            )
-                                        )}
-                                    </ListboxOptions>
-                                </div>
-                            </Listbox>
-                        </div>
-                        {/* Door style selectbox */}
-                        <div className="sm:col-span-4">
-                            <Listbox
-                                value={selectedDoorType}
-                                onChange={setSelectedDoorType}
-                            >
-                                <Label className="block text-sm/6 font-medium text-gray-900">
-                                    Door style
-                                </Label>
-                                <div className="relative mt-2">
-                                    <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
-                                        <span className="col-start-1 row-start-1 flex w-full gap-2 pr-6">
-                                            <span className="truncate">
-                                                {selectedDoorType.name}
-                                            </span>
-                                            <span className="truncate text-gray-500">
-                                                {selectedDoorType.doorCode}
-                                            </span>
-                                        </span>
-                                        <ChevronUpDownIcon
-                                            aria-hidden="true"
-                                            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                                        />
-                                    </ListboxButton>
-
-                                    <ListboxOptions
-                                        transition
-                                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                                    >
-                                        {doorTypes.map((doorType) => (
-                                            <ListboxOption
-                                                key={doorType.doorCode}
-                                                value={doorType}
-                                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
-                                            >
-                                                <div className="flex">
-                                                    <span className="truncate font-normal group-data-selected:font-semibold">
-                                                        {doorType.name}
-                                                    </span>
-                                                    <span className="ml-2 truncate text-gray-500 group-data-focus:text-indigo-200">
-                                                        {doorType.doorCode}
-                                                    </span>
-                                                </div>
-
-                                                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                                                    <CheckIcon
-                                                        aria-hidden="true"
-                                                        className="size-5"
-                                                    />
-                                                </span>
-                                            </ListboxOption>
-                                        ))}
-                                    </ListboxOptions>
-                                </div>
-                            </Listbox>
-                        </div>
-
-                        <div className="sm:col-span-3">
                             <label
-                                htmlFor="country"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                                htmlFor="location"
+                                className="block text-sm/6 font-medium text-gray-900"
                             >
-                                Country
+                                Construction Type
                             </label>
                             <div className="mt-2 grid grid-cols-1">
                                 <select
-                                    id="country"
-                                    name="country"
-                                    autoComplete="country-name"
-                                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-indigo-500"
+                                    id="location"
+                                    name="location"
+                                    defaultValue="Canada"
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) =>
+                                        handleConstructionTypeChange(e)
+                                    }
                                 >
-                                    <option>United States</option>
-                                    <option>Canada</option>
-                                    <option>Mexico</option>
+                                    <option>One Piece</option>
+                                    <option>Five Piece</option>
                                 </select>
-                                {/* <ChevronDownIcon
-                                    aria-hidden="true"
-                                    className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400"
-                                /> */}
+                            </div>
+                        </div>
+                        {/* Door style selectbox */}
+                        <div className="sm:col-span-4">
+                            <div className="sm:col-span-4">
+                                <label
+                                    htmlFor="location"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Construction Type
+                                </label>
+                                <div className="mt-2 grid grid-cols-1">
+                                    <select
+                                        id="location"
+                                        name="location"
+                                        defaultValue={selectedDoorType}
+                                        className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                        onChange={(e) =>
+                                            handleDoorStyleChange(e)
+                                        }
+                                    >
+                                        {doorList.map((type) => (
+                                            <option key={type.name}>
+                                                {type.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3 h-auto max-w-full">
+                            <img src={doorStyleImgPath} alt="Image Here" />
+                        </div>
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="location"
+                                className="block text-sm/6 font-medium text-gray-900"
+                            >
+                                Wood Type
+                            </label>
+                            <div className="mt-2 grid grid-cols-1">
+                                <select
+                                    id="location"
+                                    name="location"
+                                    defaultValue={woodType}
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) => handleWoodTypeChange(e)}
+                                >
+                                    {woodTypeList.map((type) => (
+                                        <option key={type.name}>
+                                            {type.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
-                        <div className="col-span-full">
-                            <label
-                                htmlFor="street-address"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                Street address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="street-address"
-                                    name="street-address"
-                                    type="text"
-                                    autoComplete="street-address"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
+                        <div className="col-span-full"></div>
 
-                        <div className="sm:col-span-2 sm:col-start-1">
-                            <label
-                                htmlFor="city"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                City
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="city"
-                                    name="city"
-                                    type="text"
-                                    autoComplete="address-level2"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
+                        <div className="sm:col-span-2 sm:col-start-1"></div>
 
-                        <div className="sm:col-span-2">
-                            <label
-                                htmlFor="region"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                State / Province
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="region"
-                                    name="region"
-                                    type="text"
-                                    autoComplete="address-level1"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
+                        <div className="sm:col-span-2"></div>
 
-                        <div className="sm:col-span-2">
-                            <label
-                                htmlFor="postal-code"
-                                className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                            >
-                                ZIP / Postal code
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="postal-code"
-                                    name="postal-code"
-                                    type="text"
-                                    autoComplete="postal-code"
-                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                                />
-                            </div>
-                        </div>
+                        <div className="sm:col-span-2"></div>
                     </div>
                 </div>
 
