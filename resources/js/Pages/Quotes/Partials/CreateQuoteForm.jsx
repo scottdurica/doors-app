@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
+import Checkbox from "@/Components/Checkbox";
+import TextInput from "@/Components/TextInput";
 
 const onePieceDoorTypes = [
     {
@@ -102,7 +104,27 @@ const fivePieceDoorTypes = [
         imgPath: "/images/Dbl-shaker.png",
     },
 ];
-
+const fractions = [
+    '1"',
+    '1-1/4"',
+    '1-1/2"',
+    '1-3/4"',
+    '2"',
+    '2-1/4"',
+    '2-1/2"',
+];
+const centerPanelStyles = [
+    "RP-Beveled(MDF)",
+    "RP-Ogee(MDF)",
+    "RP-Cove(MDF)",
+    "Flat(MDF)",
+    "RP-Ogee(Solid Wood)",
+    "RP-Beveled(Solid Wood)",
+    "RP-Cove(Solid Wood)",
+    "RP-Step Bead(Solid Wood)",
+    "Flat(Solid Wood)",
+];
+const hingeBoreOptions = ["No Bore", "35mm cup", "35mm cup with dowels"];
 const woodTypesForOnePiece = [{ name: "MDF" }];
 const woodTypesForFivePiece = [
     { name: "MDF" },
@@ -111,6 +133,27 @@ const woodTypesForFivePiece = [
     { name: "Red Oak" },
     { name: "Hickory" },
     { name: "Cherry" },
+];
+const outsideEdgeStyles = [
+    "Hand Broken(standard)",
+    '1/16" Roundover',
+    '1/8" Roundover',
+    "Other(Note style below)",
+];
+const hingeTypes = [
+    'Face Frame - full-overlay (1-1/4")',
+    'Face Frame - partial overlay (1/2")',
+    'Face Frame - inset (1/16" gap)',
+    'Frameless - full-overlay (5/8")',
+    'Frameless - partial overlay (1/4")',
+    'Frameless - inset (1/16" gap)',
+];
+const doorListDoorTypes = [
+    "Door",
+    "Drawer Front",
+    "Panel",
+    "Glass",
+    "Glass w/lites",
 ];
 
 const CreateQuoteForm = ({ user }) => {
@@ -132,6 +175,14 @@ const CreateQuoteForm = ({ user }) => {
     const [doorList, setDoorList] = useState(onePieceDoorTypes);
     const [woodType, setWoodType] = useState("MDF");
     const [woodTypeList, setWoodTypeList] = useState(woodTypesForOnePiece);
+    const [railStileWidth, setRailStileWidth] = useState(fractions[6]);
+    const [centerPanel, setCenterPanel] = useState();
+    const [outsideEdge, setOutsideEdge] = useState();
+    const [rrWidth, setRRWidth] = useState();
+    const [hingeBoreOption, setHingeBoreOption] = useState();
+    const [supplyHingeOption, setSupplyHingeOption] = useState();
+    const [hingeType, setHingeType] = useState();
+    const [finishOption, setFinishOption] = useState();
     const handleDoorStyleChange = (e) => {
         const style = e.target.value;
         switch (style) {
@@ -226,13 +277,13 @@ const CreateQuoteForm = ({ user }) => {
                         </p>
                     </div>
 
-                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-6 md:col-span-2">
                         <div className="sm:col-span-4">
                             <fieldset>
                                 <p className="mt-1 text-sm/6 text-gray-600">
                                     Is this a quote or an order?
                                 </p>
-                                <div className="mt-6  space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
                                     {quoteTypes.map((quoteType) => (
                                         <div
                                             key={quoteType.id}
@@ -276,20 +327,20 @@ const CreateQuoteForm = ({ user }) => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            Shipping Details
+                            Shipping
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
                             Choose how to receive your doors.
                         </p>
                     </div>
 
-                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-6 md:col-span-2">
                         <div className="sm:col-span-4">
                             <fieldset>
                                 <p className="mt-1 text-sm/6 text-gray-600">
                                     Select a delivery option
                                 </p>
-                                <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
                                     <div className="flex items-center">
                                         <input
                                             id="ship"
@@ -362,7 +413,7 @@ const CreateQuoteForm = ({ user }) => {
                         {pickupOptionVal !== "pickup" &&
                             isAddressGood === true && (
                                 <>
-                                    <div className="sm:col-span-4">
+                                    <div className="sm:col-span-4 ">
                                         <AddressCard
                                             title={
                                                 pickupOptionVal === "ship"
@@ -430,23 +481,16 @@ const CreateQuoteForm = ({ user }) => {
                             isAddressGood === false && (
                                 <div className="sm:col-span-4">
                                     <LabelWithHintRight
-                                        value="Ship To Name"
+                                        value="Ship To"
                                         hint="Required"
                                         name="shiptoname"
                                         id="shiptoname"
                                         type="text"
                                         placeholder=""
                                     />
+
                                     <LabelWithHintRight
-                                        value="Last Name"
-                                        hint="Required"
-                                        name="lname"
-                                        id="lname"
-                                        type="text"
-                                        placeholder=""
-                                    />
-                                    <LabelWithHintRight
-                                        value="Ship To Address"
+                                        value="Address"
                                         hint="Required"
                                         name="street"
                                         id="street"
@@ -466,18 +510,18 @@ const CreateQuoteForm = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Personal Information section */}
+                {/* Door Details section */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
                             Door Details
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Set general door details here.
+                            Set general door details.
                         </p>
                     </div>
 
-                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 md:col-span-2">
                         {/* Construction type selectbox */}
                         <div className="sm:col-span-4">
                             <label
@@ -486,12 +530,12 @@ const CreateQuoteForm = ({ user }) => {
                             >
                                 Construction Type
                             </label>
-                            <div className="mt-2 grid grid-cols-1">
+                            <div className="mt-0 grid grid-cols-1">
                                 <select
                                     id="location"
                                     name="location"
                                     defaultValue="Canada"
-                                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) =>
                                         handleConstructionTypeChange(e)
                                     }
@@ -508,14 +552,14 @@ const CreateQuoteForm = ({ user }) => {
                                     htmlFor="location"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
-                                    Construction Type
+                                    Door Style
                                 </label>
-                                <div className="mt-2 grid grid-cols-1">
+                                <div className="mt-0 grid grid-cols-1">
                                     <select
                                         id="location"
                                         name="location"
                                         defaultValue={selectedDoorType}
-                                        className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                        className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                         onChange={(e) =>
                                             handleDoorStyleChange(e)
                                         }
@@ -529,22 +573,24 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </div>
                         </div>
+                        {/* Door style image */}
                         <div className="sm:col-span-3 h-auto max-w-full">
                             <img src={doorStyleImgPath} alt="Image Here" />
                         </div>
+                        {/* Wood type section */}
                         <div className="sm:col-span-4">
                             <label
-                                htmlFor="location"
+                                htmlFor="woodtype"
                                 className="block text-sm/6 font-medium text-gray-900"
                             >
                                 Wood Type
                             </label>
-                            <div className="mt-2 grid grid-cols-1">
+                            <div className="mt-0 grid grid-cols-1">
                                 <select
-                                    id="location"
-                                    name="location"
+                                    id="woodtype"
+                                    name="woodtype"
                                     defaultValue={woodType}
-                                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) => handleWoodTypeChange(e)}
                                 >
                                     {woodTypeList.map((type) => (
@@ -556,6 +602,100 @@ const CreateQuoteForm = ({ user }) => {
                             </div>
                         </div>
 
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="rswidth"
+                                className="block text-sm/6 font-medium text-gray-900"
+                            >
+                                Rail and Stile Width
+                            </label>
+                            <div className="mt-0 grid grid-cols-1">
+                                <select
+                                    id="rswidth"
+                                    name="rswidth"
+                                    // defaultValue={fractions[6]}
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) =>
+                                        setRailStileWidth(e.target.value)
+                                    }
+                                >
+                                    {fractions.map((size) => (
+                                        <option key={size}>{size}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="rrwidth"
+                                className="block text-sm/6 font-medium text-gray-900"
+                            >
+                                Reduced Rail Width
+                            </label>
+                            <div className="mt-0 grid grid-cols-1">
+                                <select
+                                    id="rrwidth"
+                                    name="rrwidth"
+                                    // defaultValue={fractions[6]}
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) => setRRWidth(e.target.value)}
+                                >
+                                    {fractions.map((size, index) => (
+                                        <option key={`${size}-${index}`}>
+                                            {size}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        {selectedConstructionType === "Five Piece" && (
+                            <div className="sm:col-span-4">
+                                <label
+                                    htmlFor="centerpanel"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Center Panel Style
+                                </label>
+                                <div className="mt-0 grid grid-cols-1">
+                                    <select
+                                        id="centerpanel"
+                                        name="centerpanel"
+                                        // defaultValue={fractions[6]}
+                                        className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                        onChange={(e) =>
+                                            setCenterPanel(e.target.value)
+                                        }
+                                    >
+                                        {centerPanelStyles.map((style) => (
+                                            <option key={style}>{style}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        )}
+                        <div className="sm:col-span-4">
+                            <label
+                                htmlFor="centerpanel"
+                                className="block text-sm/6 font-medium text-gray-900"
+                            >
+                                Outside Edge Profile
+                            </label>
+                            <div className="mt-0 grid grid-cols-1">
+                                <select
+                                    id="OutsideEdge"
+                                    name="OutsideEdge"
+                                    // defaultValue={fractions[6]}
+                                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) =>
+                                        setOutsideEdge(e.target.value)
+                                    }
+                                >
+                                    {outsideEdgeStyles.map((style) => (
+                                        <option key={style}>{style}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                         <div className="col-span-full"></div>
 
                         <div className="sm:col-span-2 sm:col-start-1"></div>
@@ -565,226 +705,327 @@ const CreateQuoteForm = ({ user }) => {
                         <div className="sm:col-span-2"></div>
                     </div>
                 </div>
-
+                {/* Door Finish section */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            Notifications
+                            Hinges and Finish
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            We'll always let you know about important changes,
-                            but you pick what else you want to hear about.
+                            Set door hinge location and select finish.
                         </p>
                     </div>
 
-                    <div className="max-w-2xl space-y-10 md:col-span-2">
-                        <fieldset>
-                            <legend className="text-sm/6 font-semibold text-gray-900 dark:text-white">
-                                By email
-                            </legend>
-                            <div className="mt-6 space-y-6">
-                                <div className="flex gap-3">
-                                    <div className="flex h-6 shrink-0 items-center">
-                                        <div className="group grid size-4 grid-cols-1">
-                                            <input
-                                                defaultChecked
-                                                id="comments"
-                                                name="comments"
-                                                type="checkbox"
-                                                aria-describedby="comments-description"
-                                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto"
-                                            />
-                                            <svg
-                                                fill="none"
-                                                viewBox="0 0 14 14"
-                                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
-                                            >
-                                                <path
-                                                    d="M3 8L6 11L11 3.5"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-checked:opacity-100"
-                                                />
-                                                <path
-                                                    d="M3 7H11"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-indeterminate:opacity-100"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div className="text-sm/6">
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-6 md:col-span-2">
+                        {/* Finish selection */}
+                        <div className="sm:col-span-4">
+                            <fieldset>
+                                <p className="mt-1 text-sm/6 text-gray-600">
+                                    What level of finish would you like?
+                                </p>
+                                <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
+                                    <div className="flex items-center">
+                                        <input
+                                            defaultChecked="true"
+                                            id="primed"
+                                            type="radio"
+                                            name="finishtype"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            onChange={(e) =>
+                                                setFinishOption("Primed")
+                                            }
+                                        />
                                         <label
-                                            htmlFor="comments"
-                                            className="font-medium text-gray-900 dark:text-white"
+                                            htmlFor="primed"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
                                         >
-                                            Comments
+                                            Primed
                                         </label>
-                                        <p
-                                            id="comments-description"
-                                            className="text-gray-500 dark:text-gray-400"
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="raw"
+                                            type="radio"
+                                            name="finishtype"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            onChange={(e) =>
+                                                setFinishOption("Raw")
+                                            }
+                                        />
+                                        <label
+                                            htmlFor="raw"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
                                         >
-                                            Get notified when someones posts a
-                                            comment on a posting.
-                                        </p>
+                                            Raw
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="fullfinish"
+                                            type="radio"
+                                            name="finishtype"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            onChange={(e) =>
+                                                setFinishOption(
+                                                    "Fully Finished"
+                                                )
+                                            }
+                                        />
+                                        <label
+                                            htmlFor="fullfinish"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                        >
+                                            Fully Finished
+                                        </label>
                                     </div>
                                 </div>
-                                <div className="flex gap-3">
-                                    <div className="flex h-6 shrink-0 items-center">
-                                        <div className="group grid size-4 grid-cols-1">
+                            </fieldset>
+                        </div>
+                        {/* Bore hinges? */}
+                        <div className="sm:col-span-4">
+                            <fieldset>
+                                <p className="mt-1 text-sm/6 text-gray-600">
+                                    Sleect hinge bore option
+                                </p>
+                                <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
+                                    {hingeBoreOptions.map((option) => (
+                                        <div
+                                            key={option}
+                                            className="flex items-center"
+                                            onChange={(e) =>
+                                                setHingeBoreOption(
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
                                             <input
-                                                id="candidates"
-                                                name="candidates"
-                                                type="checkbox"
-                                                aria-describedby="candidates-description"
-                                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                                                defaultChecked={
+                                                    option === "No Bore"
+                                                }
+                                                id={option}
+                                                name="hingeboreoption"
+                                                type="radio"
+                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             />
-                                            <svg
-                                                fill="none"
-                                                viewBox="0 0 14 14"
-                                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
+                                            <label
+                                                htmlFor={option}
+                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
                                             >
-                                                <path
-                                                    d="M3 8L6 11L11 3.5"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-checked:opacity-100"
-                                                />
-                                                <path
-                                                    d="M3 7H11"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-indeterminate:opacity-100"
-                                                />
-                                            </svg>
+                                                {option}
+                                            </label>
                                         </div>
-                                    </div>
-                                    <div className="text-sm/6">
+                                    ))}
+                                </div>
+                            </fieldset>
+                        </div>
+                        {/* Supply hinges? */}
+                        <div className="sm:col-span-4">
+                            <fieldset>
+                                <p className="mt-1 text-sm/6 text-gray-600">
+                                    Would you like us to supply hinges?
+                                </p>
+                                <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
+                                    <div className="flex items-center">
+                                        <input
+                                            defaultChecked="true"
+                                            id="no"
+                                            type="radio"
+                                            name="hingesupply"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            onChange={(e) =>
+                                                setSupplyHingeOption("No")
+                                            }
+                                        />
                                         <label
-                                            htmlFor="candidates"
-                                            className="font-medium text-gray-900 dark:text-white"
+                                            htmlFor="no"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
                                         >
-                                            Candidates
+                                            No
                                         </label>
-                                        <p
-                                            id="candidates-description"
-                                            className="text-gray-500 dark:text-gray-400"
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="yes"
+                                            type="radio"
+                                            name="hingesupply"
+                                            className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                            onChange={(e) =>
+                                                setSupplyHingeOption("Yes")
+                                            }
+                                        />
+                                        <label
+                                            htmlFor="yes"
+                                            className="ml-3 block text-sm/6 font-medium text-gray-900"
                                         >
-                                            Get notified when a candidate
-                                            applies for a job.
-                                        </p>
+                                            Yes
+                                        </label>
                                     </div>
                                 </div>
-                                <div className="flex gap-3">
-                                    <div className="flex h-6 shrink-0 items-center">
-                                        <div className="group grid size-4 grid-cols-1">
-                                            <input
-                                                id="offers"
-                                                name="offers"
-                                                type="checkbox"
-                                                aria-describedby="offers-description"
-                                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto"
-                                            />
-                                            <svg
-                                                fill="none"
-                                                viewBox="0 0 14 14"
-                                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
-                                            >
-                                                <path
-                                                    d="M3 8L6 11L11 3.5"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-checked:opacity-100"
-                                                />
-                                                <path
-                                                    d="M3 7H11"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="opacity-0 group-has-indeterminate:opacity-100"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div className="text-sm/6">
-                                        <label
-                                            htmlFor="offers"
-                                            className="font-medium text-gray-900 dark:text-white"
+                            </fieldset>
+                        </div>
+                        {/* Hinge type selectbox */}
+                        {supplyHingeOption === "Yes" && (
+                            <div className="sm:col-span-4">
+                                <div className="sm:col-span-4">
+                                    <label
+                                        htmlFor="hingetype"
+                                        className="block text-sm/6 font-medium text-gray-900"
+                                    >
+                                        Hinge Type
+                                    </label>
+                                    <div className="mt-0 grid grid-cols-1">
+                                        <select
+                                            id="hingetype"
+                                            name="hingetype"
+                                            defaultValue={hingeTypes[0]}
+                                            className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
+                                            onChange={(e) =>
+                                                setHingeType(e.target.value)
+                                            }
                                         >
-                                            Offers
-                                        </label>
-                                        <p
-                                            id="offers-description"
-                                            className="text-gray-500 dark:text-gray-400"
-                                        >
-                                            Get notified when a candidate
-                                            accepts or rejects an offer.
-                                        </p>
+                                            {hingeTypes.map((type) => (
+                                                <option key={type}>
+                                                    {type}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                        </fieldset>
+                        )}
 
-                        <fieldset>
-                            <legend className="text-sm/6 font-semibold text-gray-900 dark:text-white">
-                                Push notifications
-                            </legend>
-                            <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                                These are delivered via SMS to your mobile
-                                phone.
+                        <div className="col-span-full"></div>
+
+                        <div className="sm:col-span-2 sm:col-start-1"></div>
+
+                        <div className="sm:col-span-2"></div>
+
+                        <div className="sm:col-span-2"></div>
+                    </div>
+                </div>
+                {/* Start of door input table */}
+                <div className="px-4 sm:px-6 lg:px-8">
+                    <div className="sm:flex sm:items-center">
+                        <div className="sm:flex-auto">
+                            <h1 className="text-base font-semibold text-gray-900">
+                                Users
+                            </h1>
+                            <p className="mt-2 text-sm text-gray-700">
+                                A list of all the users in your account
+                                including their name, title, email and role.
                             </p>
-                            <div className="mt-6 space-y-6">
-                                <div className="flex items-center gap-x-3">
-                                    <input
-                                        defaultChecked
-                                        id="push-everything"
-                                        name="push-notifications"
-                                        type="radio"
-                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
-                                    />
-                                    <label
-                                        htmlFor="push-everything"
-                                        className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                                    >
-                                        Everything
-                                    </label>
-                                </div>
-                                <div className="flex items-center gap-x-3">
-                                    <input
-                                        id="push-email"
-                                        name="push-notifications"
-                                        type="radio"
-                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
-                                    />
-                                    <label
-                                        htmlFor="push-email"
-                                        className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                                    >
-                                        Same as email
-                                    </label>
-                                </div>
-                                <div className="flex items-center gap-x-3">
-                                    <input
-                                        id="push-nothing"
-                                        name="push-notifications"
-                                        type="radio"
-                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
-                                    />
-                                    <label
-                                        htmlFor="push-nothing"
-                                        className="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                                    >
-                                        No push notifications
-                                    </label>
-                                </div>
+                        </div>
+                        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                            <button
+                                type="button"
+                                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                                Add user
+                            </button>
+                        </div>
+                    </div>
+                    <div className="mt-8 flow-root">
+                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                <table className="min-w-full divide-y divide-gray-300 ">
+                                    <thead>
+                                        <tr className="divide-x divide-gray-200">
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pl-3 w-8"
+                                            >
+                                                Qty
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 w-8"
+                                            >
+                                                Width
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 w-8"
+                                            >
+                                                Height
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pr-4 w-8"
+                                            >
+                                                Glass
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pr-3 w-8"
+                                            >
+                                                Slab
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pr-3 w-8"
+                                            >
+                                                RR
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pr-3 w-8"
+                                            >
+                                                Bore
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="py-0 pr-3 pl-3 text-left text-sm font-semibold text-gray-900 sm:pr-0 "
+                                            >
+                                                Notes
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    {/*                                   {"quantity":4,"width":12,"height":14,"type":"door","slab":1,"rails":2.25,"stiles":2,"notes":"This is a note about the doors","bore":0}]
+                                     */}
+                                    <tbody className="divide-y divide-gray-200 bg-white">
+                                        <tr className="divide-x divide-gray-200">
+                                            <td className="py-4 pr-4 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
+                                                2
+                                            </td>
+                                            <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                12
+                                            </td>
+                                            <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                12
+                                            </td>
+
+                                            <td className="text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
+                                                <Checkbox
+                                                    id="isglass"
+                                                    name="isglass"
+                                                ></Checkbox>
+                                            </td>
+                                            <td className="text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
+                                                <Checkbox
+                                                    id="isslab"
+                                                    name="isslab"
+                                                ></Checkbox>
+                                            </td>
+                                            <td className="text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
+                                                <Checkbox
+                                                    id="isrr"
+                                                    name="isrr"
+                                                ></Checkbox>
+                                            </td>
+                                            <td className="text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
+                                                <Checkbox
+                                                    id="isbored"
+                                                    name="isbored"
+                                                ></Checkbox>
+                                            </td>
+                                            <td>
+                                                <TextInput></TextInput>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
             </div>

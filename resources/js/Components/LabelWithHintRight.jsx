@@ -21,7 +21,7 @@ const InputWithHintRight = ({
                 </label>
                 <span className="text-xs text-gray-500">{hint}</span>
             </div>
-            <div className="mt-2 ">
+            <div className="mt-0 ">
                 <input
                     id={id}
                     name={name}
