@@ -1151,9 +1151,9 @@ const CreateQuoteForm = ({ user }) => {
                     <div className="mt-8 flow-root">
                         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                <table className="min-w-full divide-y divide-gray-300 ">
+                                <table className="min-w-full divide-y divide-gray-500 ">
                                     <thead>
-                                        <tr className="divide-x divide-gray-200">
+                                        <tr className="divide-x divide-gray-300">
                                             <th
                                                 scope="col"
                                                 className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pl-3 w-8"
@@ -1216,7 +1216,7 @@ const CreateQuoteForm = ({ user }) => {
                                     </thead>
                                     {/*                                   {"quantity":4,"width":12,"height":14,"type":"door","slab":1,"rails":2.25,"stiles":2,"notes":"This is a note about the doors","bore":0}]
                                      */}
-                                    <tbody className="divide-y divide-gray-200 bg-white">
+                                    <tbody className="divide-y divide-gray-300 bg-white">
                                         {doorEntries.map((row, index) => (
                                             <tr
                                                 key={index}
@@ -1225,9 +1225,9 @@ const CreateQuoteForm = ({ user }) => {
                                                 <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
                                                     <label>{row.id}</label>
                                                 </td>
-                                                <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                <td className="px-4 py-1 text-sm whitespace-nowrap text-gray-500 text-center">
                                                     <input
-                                                        className="block w-full rounded-sm bg-white px-3 py-1.5 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
+                                                        className="block w-full rounded-sm bg-white px-1 py-1 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
                                                         id="qty"
                                                         name="qty"
                                                         value={row.qty}
@@ -1239,9 +1239,9 @@ const CreateQuoteForm = ({ user }) => {
                                                         }
                                                     ></input>
                                                 </td>
-                                                <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                <td className="px-4 py-1 text-sm whitespace-nowrap text-gray-500 text-center">
                                                     <input
-                                                        className="block w-full rounded-sm bg-white px-3 py-1.5 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
+                                                        className="block w-full rounded-sm bg-white px-3 py-1 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
                                                         id="width"
                                                         name="width"
                                                         type="text"
@@ -1254,9 +1254,9 @@ const CreateQuoteForm = ({ user }) => {
                                                         }
                                                     ></input>
                                                 </td>
-                                                <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                <td className="px-4 py-1 text-sm whitespace-nowrap text-gray-500 text-center">
                                                     <input
-                                                        className="block w-full rounded-sm bg-white px-3 py-1.5 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
+                                                        className="block w-full rounded-sm bg-white px-3 py-1 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
                                                         id="height"
                                                         name="height"
                                                         type="text"
@@ -1322,9 +1322,9 @@ const CreateQuoteForm = ({ user }) => {
                                                         ></Checkbox>
                                                     </td>
                                                 )}
-                                                <td className="p-4 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                <td className="px-4 py-1 text-sm whitespace-nowrap text-gray-500 text-center">
                                                     <input
-                                                        className="block w-full rounded-sm bg-white px-3 py-1.5 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
+                                                        className="block w-full rounded-sm bg-white px-3 py-1 border-gray-300 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 "
                                                         id="notes"
                                                         name="notes"
                                                         type="text"
