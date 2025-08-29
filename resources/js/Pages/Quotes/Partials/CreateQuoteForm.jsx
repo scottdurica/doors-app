@@ -116,15 +116,15 @@ const fractions = [
     '2-1/2"',
 ];
 const centerPanelStyles = [
+    "Flat(MDF)",
     "RP-Beveled(MDF)",
     "RP-Ogee(MDF)",
     "RP-Cove(MDF)",
-    "Flat(MDF)",
+    "Flat(Solid Wood)",
     "RP-Ogee(Solid Wood)",
     "RP-Beveled(Solid Wood)",
     "RP-Cove(Solid Wood)",
     "RP-Step Bead(Solid Wood)",
-    "Flat(Solid Wood)",
 ];
 const hingeBoreOptions = ["No Bore", "35mm cup", "35mm cup with dowels"];
 const woodTypesForOnePiece = [{ name: "MDF" }];
@@ -168,6 +168,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "2",
@@ -179,6 +180,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "3",
@@ -190,6 +192,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "4",
@@ -201,6 +204,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "5",
@@ -212,6 +216,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "6",
@@ -223,6 +228,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "7",
@@ -234,6 +240,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "8",
@@ -245,6 +252,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "9",
@@ -256,6 +264,7 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
     {
         id: "10",
@@ -267,15 +276,16 @@ const tenBlankRows = [
         rr: "",
         bore: "",
         notes: "",
+        sf: "",
     },
 ];
 
 const CreateQuoteForm = ({ user }) => {
-    const quoteTypes = [
-        { id: "quote", title: "Quote" },
-        { id: "order", title: "Order" },
-    ];
-
+    // const quoteTypes = [
+    //     { id: "quote", title: "Quote" },
+    //     { id: "order", title: "Order" },
+    // ];
+    const [quoteType, setQuoteType] = useState("Quote");
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
     const [isAddressGood, setIsAddressGood] = useState(true);
     const [selectedDoorType, setSelectedDoorType] = useState(
@@ -290,7 +300,7 @@ const CreateQuoteForm = ({ user }) => {
     const [woodType, setWoodType] = useState("MDF");
     const [woodTypeList, setWoodTypeList] = useState(woodTypesForOnePiece);
     const [railStileWidth, setRailStileWidth] = useState(fractions[6]);
-    const [centerPanel, setCenterPanel] = useState();
+    const [centerPanel, setCenterPanel] = useState("Flat(MDF)");
     const [outsideEdge, setOutsideEdge] = useState();
     const [rrWidth, setRRWidth] = useState();
     const [hingeBoreOption, setHingeBoreOption] = useState("No Bore");
@@ -369,6 +379,7 @@ const CreateQuoteForm = ({ user }) => {
             setDoorList(onePieceDoorTypes);
             setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
             setWoodTypeList(woodTypesForOnePiece);
+            setWoodType("MDF");
         } else {
             setDoorList(fivePieceDoorTypes);
             setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
@@ -380,14 +391,72 @@ const CreateQuoteForm = ({ user }) => {
     };
 
     const handleDoorSetChange = (e, index) => {
-        console.log({ index });
         const { name, value } = e.target;
-        console.log(name, value);
-        const newDoorEntries = [...doorEntries];
-        newDoorEntries[index][name] = value;
-        console.log(newDoorEntries[index][name]);
-        setDoorEntries(newDoorEntries);
-        //console.log(newDoorEntries);
+        switch (name) {
+            case "height":
+                if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                    const newDoorEntries = [...doorEntries];
+                    newDoorEntries[index][name] = value;
+                    newDoorEntries[index]["sf"] = (
+                        (newDoorEntries[index]["width"] *
+                            value *
+                            newDoorEntries[index]["qty"]) /
+                        144
+                    ).toFixed(3);
+                    setDoorEntries(newDoorEntries);
+                    console.log("Field Validated and updated");
+                } else {
+                    console.log("Incorrect input in width field.");
+                }
+                break;
+            case "width":
+                // if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                    const newDoorEntries = [...doorEntries];
+                    newDoorEntries[index][name] = value;
+                    newDoorEntries[index]["sf"] = (
+                        (newDoorEntries[index]["height"] *
+                            value *
+                            newDoorEntries[index]["qty"]) /
+                        144
+                    ).toFixed(3);
+                    setDoorEntries(newDoorEntries);
+                    console.log("Field Validated and updated");
+                } else {
+                    console.log("Incorrect input in width field.");
+                }
+                break;
+            case "qty":
+                if (value.match(/^(\d{1,2})$/)) {
+                    const newDoorEntries = [...doorEntries];
+                    newDoorEntries[index][name] = value;
+                    newDoorEntries[index]["sf"] = (
+                        (newDoorEntries[index]["height"] *
+                            value *
+                            newDoorEntries[index]["width"]) /
+                        144
+                    ).toFixed(3);
+                    setDoorEntries(newDoorEntries);
+                    console.log("Field Validated and updated");
+                } else {
+                    console.log("Incorrect input in width field.");
+                }
+                break;
+            case "notes":
+                const newDoorEntries = [...doorEntries];
+                const clean_value = value.replace(/<[^>]*>/g, "");
+                newDoorEntries[index][name] = clean_value;
+
+                setDoorEntries(newDoorEntries);
+                console.log(`Value of Note: ${clean_value}`);
+
+                break;
+        }
+        // console.log(name, value);
+        // const newDoorEntries = [...doorEntries];
+        // newDoorEntries[index][name] = value;
+        // console.log(newDoorEntries[index][name]);
+        // setDoorEntries(newDoorEntries);
     };
 
     const addDoorRows = () => {
@@ -403,6 +472,7 @@ const CreateQuoteForm = ({ user }) => {
                 rr: "",
                 bore: "",
                 notes: "",
+                sf: "",
             },
         ]);
     };
@@ -428,7 +498,35 @@ const CreateQuoteForm = ({ user }) => {
                                     Is this a quote or an order?
                                 </p>
                                 <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
-                                    {quoteTypes.map((quoteType) => (
+                                    <input
+                                        id="quote"
+                                        name="quotetype"
+                                        type="radio"
+                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                        checked={quoteType === "Quote"}
+                                        onChange={(e) => setQuoteType("Quote")}
+                                    />
+                                    <label
+                                        htmlFor="quote"
+                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                    >
+                                        Quote
+                                    </label>
+                                    <input
+                                        id="order"
+                                        name="quotetype"
+                                        type="radio"
+                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+                                        checked={quoteType === "Order"}
+                                        onChange={(e) => setQuoteType("Order")}
+                                    />
+                                    <label
+                                        htmlFor="order"
+                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
+                                    >
+                                        Order
+                                    </label>
+                                    {/* {quoteTypes.map((quoteType) => (
                                         <div
                                             key={quoteType.id}
                                             className="flex items-center"
@@ -449,7 +547,7 @@ const CreateQuoteForm = ({ user }) => {
                                                 {quoteType.title}
                                             </label>
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </fieldset>
                         </div>
@@ -654,14 +752,14 @@ const CreateQuoteForm = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Door Details section */}
+                {/* Door Construction section */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                            Door Details
+                            Door Construction
                         </h2>
                         <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
-                            Set general door details.
+                            Set door style and materials.
                         </p>
                     </div>
 
@@ -1133,7 +1231,7 @@ const CreateQuoteForm = ({ user }) => {
                     <div className="sm:flex sm:items-center">
                         <div className="sm:flex-auto">
                             <h1 className="text-base font-semibold text-gray-900">
-                                Door Fields
+                                Doors
                             </h1>
                             <p className="mt-2 text-sm text-gray-700">
                                 List all of your doors here.
@@ -1148,8 +1246,8 @@ const CreateQuoteForm = ({ user }) => {
                             </button>
                         </div> */}
                     </div>
-                    <div className="mt-8 flow-root">
-                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div className="mt-8 flow-root ">
+                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
                             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                 <table className="min-w-full divide-y divide-gray-500 ">
                                     <thead>
@@ -1211,6 +1309,12 @@ const CreateQuoteForm = ({ user }) => {
                                                 className="py-0 pr-3 pl-3 text-left text-sm font-semibold text-gray-900 sm:pr-0 "
                                             >
                                                 Notes
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-12 py-3 text-center text-sm font-semibold text-gray-900 w-8"
+                                            >
+                                                SF
                                             </th>
                                         </tr>
                                     </thead>
@@ -1328,7 +1432,7 @@ const CreateQuoteForm = ({ user }) => {
                                                         id="notes"
                                                         name="notes"
                                                         type="text"
-                                                        maxLength="10"
+                                                        maxLength="255"
                                                         value={row.notes}
                                                         onChange={(e) =>
                                                             handleDoorSetChange(
@@ -1338,6 +1442,17 @@ const CreateQuoteForm = ({ user }) => {
                                                         }
                                                     ></input>
                                                 </td>
+                                                <td className="px-4 py-1 text-sm whitespace-nowrap text-gray-500 text-center">
+                                                    <input
+                                                        className="block w-full  px-3 py-1 text-red-900 sm:text-sm/6 border-none "
+                                                        id="sf"
+                                                        disabled={true}
+                                                        name="sf"
+                                                        type="number"
+                                                        step="0.01"
+                                                        value={row.sf}
+                                                    ></input>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -1345,7 +1460,7 @@ const CreateQuoteForm = ({ user }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="justify-end sm:flex sm:items-center mt-4 ">
+                    <div className="justify-end sm:flex sm:items-center mt-4 border-b border-gray-900/10 mb-10">
                         {/* <div className="sm:flex-auto">
                             <h1 className="text-base font-semibold text-gray-900">
                                 Door Fields
@@ -1354,34 +1469,75 @@ const CreateQuoteForm = ({ user }) => {
                                 List all of your doors here.
                             </p>
                         </div> */}
-                        {doorEntries.length < 26 && (
-                            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none ">
+                        {doorEntries.length < 25 && (
+                            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none  ">
                                 <button
                                     type="button"
-                                    className="rounded-sm bg-white px-2 py-1 text-md font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-200"
+                                    className="mb-10 mt-8 rounded-sm bg-black px-2 py-1 text-md font-semibold text-white-900 text-white shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-600 "
                                     onClick={addDoorRows}
                                 >
-                                    Add More Rows
+                                    Add Another Row
                                 </button>
                             </div>
                         )}
                     </div>
                 </div>
-            </div>
+                {/* Summary */}
+                <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
+                    <div>
+                        <h2 className="text-base/7 font-semibold text-gray-900 dark:text-white">
+                            Summary
+                        </h2>
+                        <p className="mt-1 text-sm/6 text-gray-600 dark:text-gray-400">
+                            Please verify all sizing before submitting
+                            order/quote.
+                        </p>
+                    </div>
 
-            <div className="mt-6 flex items-center justify-end gap-x-6">
-                <button
-                    type="button"
-                    className="text-sm/6 font-semibold text-gray-900 dark:text-white"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:focus-visible:outline-indigo-500"
-                >
-                    Save
-                </button>
+                    <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-6 md:col-span-2">
+                        <div className="sm:col-span-4">
+                            <AddressCard
+                                title="Quote or Order?"
+                                content={quoteType}
+                            ></AddressCard>
+                        </div>
+                        <div className="sm:col-span-4">
+                            <AddressCard
+                                title="Door Style"
+                                content={
+                                    selectedConstructionType === "One Piece"
+                                        ? `${selectedConstructionType} ${selectedDoorType}-${woodType}`
+                                        : `${selectedConstructionType} - ${woodType} - ${selectedDoorType} -  ${centerPanel} Center Panels`
+                                }
+                            ></AddressCard>
+                        </div>
+                        <div className="sm:col-span-4">
+                            <LabelWithHintRight
+                                value="Job Name/PO"
+                                hint="Required"
+                                name="po_number"
+                                id="po_number"
+                                type="text"
+                                placeholder=""
+                                className="text-xs"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                    <button
+                        type="button"
+                        className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="rounded-sm bg-black px-2 py-1 text-md font-semibold text-white-900 text-white shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-600 "
+                    >
+                        Save
+                    </button>
+                </div>
             </div>
         </form>
     );
