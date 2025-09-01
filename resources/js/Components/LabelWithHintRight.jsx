@@ -8,6 +8,8 @@ const InputWithHintRight = ({
     type,
     hint,
     placeholder,
+    inputVal,
+    onChange,
 }) => {
     return (
         <>
@@ -24,10 +26,12 @@ const InputWithHintRight = ({
             <div className="mt-0 ">
                 <input
                     id={id}
+                    value={inputVal}
                     name={name}
                     type={type}
                     placeholder={placeholder}
                     className="block w-full rounded-sm bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    onChange={onChange}
                 />
             </div>
         </>

@@ -281,10 +281,6 @@ const tenBlankRows = [
 ];
 
 const CreateQuoteForm = ({ user }) => {
-    // const quoteTypes = [
-    //     { id: "quote", title: "Quote" },
-    //     { id: "order", title: "Order" },
-    // ];
     const [quoteType, setQuoteType] = useState("Quote");
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
     const [isAddressGood, setIsAddressGood] = useState(true);
@@ -302,13 +298,28 @@ const CreateQuoteForm = ({ user }) => {
     const [railStileWidth, setRailStileWidth] = useState(fractions[6]);
     const [centerPanel, setCenterPanel] = useState("Flat(MDF)");
     const [outsideEdge, setOutsideEdge] = useState();
-    const [rrWidth, setRRWidth] = useState();
+    const [rrWidth, setRRWidth] = useState("1");
     const [hingeBoreOption, setHingeBoreOption] = useState("No Bore");
+    const [hingeBoreDistance, setHingeBoreDistance] = useState();
     const [supplyHingeOption, setSupplyHingeOption] = useState();
     const [hingeType, setHingeType] = useState();
     const [finishOption, setFinishOption] = useState();
     const [doorEntries, setDoorEntries] = useState(tenBlankRows);
     const [hasGlassDoors, setHasGlassDoors] = useState("No");
+    const [poJobName, setPoJobName] = useState();
+    const [shipToName, setShipToName] = useState(
+        `${user.c_name.toUpperCase()} (${capitalize(user.fname)} ${capitalize(
+            user.lname
+        )})`
+    );
+    const [street, setStreet] = useState(user.street);
+    const [city, setCity] = useState(user.city);
+    const [state, setState] = useState(user.state);
+    const [zip, setZip] = useState(user.zip);
+
+    function capitalize(str) {
+        return String(str).charAt(0).toUpperCase() + String(str).slice(1);
+    }
     const handleDoorStyleChange = (e) => {
         const style = e.target.value;
         switch (style) {
@@ -460,6 +471,7 @@ const CreateQuoteForm = ({ user }) => {
     };
 
     const addDoorRows = () => {
+        console.log(user);
         setDoorEntries([
             ...doorEntries,
             {
@@ -477,8 +489,47 @@ const CreateQuoteForm = ({ user }) => {
         ]);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const quoteData = {
+            user_id: user.id,
+            quote_type: 1,
+            delivery_option: pickupOptionVal,
+            c_name: user.c_name,
+            f_name: user.fname,
+            l_name: user.lname,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip,
+            phone: user.phone,
+            email: user.email,
+            po_number: poJobName,
+            construction_type: selectedConstructionType,
+            style: selectedDoorType,
+            wood_type: woodType,
+            rs_size: railStileWidth,
+            rr_size: rrWidth,
+            outside_edge: outsideEdge,
+            hinge_option: hingeBoreOption,
+            hinge_distance: hingeBoreDistance,
+            finish: finishOption,
+            supply_hinges: 1,
+            hinge_type: hingeType,
+            notes: "this is the main temp notes.",
+            status: quoteType === "1" ? "Good to make" : "Pending approval",
+            doors: doorEntries,
+        };
+        try {
+            const response = await axios.post("/quotes/save", quoteData);
+            console.log("data saved-", response.data);
+        } catch (error) {
+            console.error("Error saving data: ", error);
+        }
+    };
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div className="space-y-4 mt-8 p-12">
                 {/* General Information */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
@@ -526,28 +577,6 @@ const CreateQuoteForm = ({ user }) => {
                                     >
                                         Order
                                     </label>
-                                    {/* {quoteTypes.map((quoteType) => (
-                                        <div
-                                            key={quoteType.id}
-                                            className="flex items-center"
-                                        >
-                                            <input
-                                                defaultChecked={
-                                                    quoteType.id === "quote"
-                                                }
-                                                id={quoteType.id}
-                                                name="quotetype"
-                                                type="radio"
-                                                className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                            />
-                                            <label
-                                                htmlFor={quoteType.id}
-                                                className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                            >
-                                                {quoteType.title}
-                                            </label>
-                                        </div>
-                                    ))} */}
                                 </div>
                             </fieldset>
                         </div>
@@ -560,6 +589,8 @@ const CreateQuoteForm = ({ user }) => {
                                 type="text"
                                 placeholder=""
                                 className="text-xs"
+                                inputVal={poJobName}
+                                onChange={(e) => setPoJobName(e.target.value)}
                             />
                         </div>
                     </div>
@@ -652,7 +683,7 @@ const CreateQuoteForm = ({ user }) => {
                                 ></AddressCard>
                             </div>
                         )}
-                        {pickupOptionVal !== "pickup" &&
+                        {/* {pickupOptionVal !== "pickup" &&
                             isAddressGood === true && (
                                 <>
                                     <div className="sm:col-span-4 ">
@@ -718,37 +749,64 @@ const CreateQuoteForm = ({ user }) => {
                                         </fieldset>
                                     </div>
                                 </>
-                            )}
-                        {pickupOptionVal !== "pickup" &&
-                            isAddressGood === false && (
-                                <div className="sm:col-span-4">
-                                    <LabelWithHintRight
-                                        value="Ship To"
-                                        hint="Required"
-                                        name="shiptoname"
-                                        id="shiptoname"
-                                        type="text"
-                                        placeholder=""
-                                    />
+                            )} */}
+                        {pickupOptionVal !== "pickup" && (
+                            <div className="sm:col-span-4">
+                                <LabelWithHintRight
+                                    value="Ship To"
+                                    hint="Required"
+                                    name="shiptoname"
+                                    id="shiptoname"
+                                    type="text"
+                                    placeholder=""
+                                    inputVal={shipToName}
+                                    onChange={(e) =>
+                                        setShipToName(e.target.value)
+                                    }
+                                />
 
-                                    <LabelWithHintRight
-                                        value="Address"
-                                        hint="Required"
-                                        name="street"
-                                        id="street"
-                                        type="text"
-                                        placeholder=""
-                                    />
-                                    <LabelWithHintRight
-                                        value="City"
-                                        hint="Required"
-                                        name="city"
-                                        id="city"
-                                        type="text"
-                                        placeholder=""
-                                    />
-                                </div>
-                            )}
+                                <LabelWithHintRight
+                                    value="Street"
+                                    hint="Required"
+                                    name="street"
+                                    id="street"
+                                    type="text"
+                                    placeholder=""
+                                    inputVal={street}
+                                    onChange={(e) => setStreet(e.target.value)}
+                                />
+                                <LabelWithHintRight
+                                    value="City"
+                                    hint="Required"
+                                    name="city"
+                                    id="city"
+                                    type="text"
+                                    placeholder=""
+                                    inputVal={city}
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
+                                <LabelWithHintRight
+                                    value="State"
+                                    hint="Required"
+                                    name="state"
+                                    id="state"
+                                    type="text"
+                                    placeholder=""
+                                    inputVal={state}
+                                    onChange={(e) => setState(e.target.value)}
+                                />
+                                <LabelWithHintRight
+                                    value="Zip"
+                                    hint="Required"
+                                    name="zip"
+                                    id="zip"
+                                    type="text"
+                                    placeholder=""
+                                    inputVal={zip}
+                                    onChange={(e) => setZip(e.target.value)}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -917,7 +975,7 @@ const CreateQuoteForm = ({ user }) => {
                         )}
                         <div className="sm:col-span-4">
                             <label
-                                htmlFor="centerpanel"
+                                htmlFor="OutsideEdge"
                                 className="block text-sm/6 font-medium text-gray-900"
                             >
                                 Outside Edge Profile
@@ -1023,6 +1081,20 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </fieldset>
                         </div>
+                        {finishOption === "Fully Finished" && (
+                            <div className="sm:col-span-4">
+                                <div className="mt-0 grid grid-cols-1">
+                                    <LabelWithHintRight
+                                        value="Finish Color"
+                                        hint="Required"
+                                        name="finishcolor"
+                                        id="finishcolor"
+                                        type="text"
+                                        placeholder=""
+                                    />
+                                </div>
+                            </div>
+                        )}
                         {/* Bore hinges? */}
                         <div className="sm:col-span-4">
                             <fieldset>
@@ -1094,6 +1166,24 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </fieldset>
                         </div>
+                        {hingeBoreOption !== "No Bore" && (
+                            <div className="sm:col-span-4">
+                                <div className="mt-0 grid grid-cols-1">
+                                    <LabelWithHintRight
+                                        value="Bore Distance (from top/bottom of door to center of cup)"
+                                        hint="Required"
+                                        name="hingeboredistance"
+                                        id="hingeboredistance"
+                                        type=""
+                                        placeholder=""
+                                        inputVal={hingeBoreDistance}
+                                        onChange={(e) =>
+                                            setHingeBoreDistance(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        )}
                         {/* Any glass panels? */}
                         <div className="sm:col-span-4">
                             <fieldset>

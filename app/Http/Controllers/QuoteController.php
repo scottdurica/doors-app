@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Inertia\Inertia;
 
+
+use Inertia\Inertia;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,4 +27,17 @@ class QuoteController extends Controller
                 'user' => Auth::user()
             ]);
         }
+
+        public function store (Request $request) {
+            dd($request);
+            $quote = Quote::create($request);
+
+            return(
+                response()->json(['Message:' => "data saved bitch", 'data' => $quote])
+            );
+
+           
+        }
+
+
     }
