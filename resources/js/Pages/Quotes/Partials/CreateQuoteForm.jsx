@@ -3,9 +3,6 @@ import { useState } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 import Checkbox from "@/Components/Checkbox";
-import Input from "@/Components/Input";
-import TextInput from "@/Components/TextInput";
-import DoorSet from "@/Components/DoorSet";
 
 const onePieceDoorTypes = [
     {
@@ -283,7 +280,6 @@ const tenBlankRows = [
 const CreateQuoteForm = ({ user }) => {
     const [quoteType, setQuoteType] = useState("Quote");
     const [pickupOptionVal, setPickupOptionVal] = useState("ship");
-    const [isAddressGood, setIsAddressGood] = useState(true);
     const [selectedDoorType, setSelectedDoorType] = useState(
         onePieceDoorTypes[0].name
     );
@@ -325,60 +321,79 @@ const CreateQuoteForm = ({ user }) => {
         switch (style) {
             case onePieceDoorTypes[0].name:
                 setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[0].name);
                 break;
             case onePieceDoorTypes[1].name:
                 setDoorStyleImgPath(onePieceDoorTypes[1].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[1].name);
                 break;
             case onePieceDoorTypes[2].name:
                 setDoorStyleImgPath(onePieceDoorTypes[2].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[2].name);
                 break;
             case onePieceDoorTypes[3].name:
                 setDoorStyleImgPath(onePieceDoorTypes[3].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[3].name);
                 break;
             case onePieceDoorTypes[4].name:
                 setDoorStyleImgPath(onePieceDoorTypes[4].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[4].name);
                 break;
             case onePieceDoorTypes[5].name:
                 setDoorStyleImgPath(onePieceDoorTypes[5].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[5].name);
                 break;
             case onePieceDoorTypes[6].name:
                 setDoorStyleImgPath(onePieceDoorTypes[6].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[6].name);
                 break;
             case onePieceDoorTypes[7].name:
                 setDoorStyleImgPath(onePieceDoorTypes[7].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[7].name);
                 break;
             case onePieceDoorTypes[8].name:
                 setDoorStyleImgPath(onePieceDoorTypes[8].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[8].name);
                 break;
             case onePieceDoorTypes[9].name:
                 setDoorStyleImgPath(onePieceDoorTypes[9].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[9].name);
                 break;
             case onePieceDoorTypes[10].name:
                 setDoorStyleImgPath(onePieceDoorTypes[10].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[10].name);
                 break;
             case onePieceDoorTypes[11].name:
                 setDoorStyleImgPath(onePieceDoorTypes[11].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[11].name);
                 break;
             case onePieceDoorTypes[12].name:
                 setDoorStyleImgPath(onePieceDoorTypes[12].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[12].name);
                 break;
             case onePieceDoorTypes[13].name:
                 setDoorStyleImgPath(onePieceDoorTypes[13].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[13].name);
                 break;
             case onePieceDoorTypes[14].name:
                 setDoorStyleImgPath(onePieceDoorTypes[14].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[14].name);
                 break;
             case onePieceDoorTypes[15].name:
                 setDoorStyleImgPath(onePieceDoorTypes[15].imgPath);
+                setSelectedDoorType(onePieceDoorTypes[15].name);
                 break;
             case fivePieceDoorTypes[0].name:
                 setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+                setSelectedDoorType(fivePieceDoorTypes[0].name);
                 break;
             case fivePieceDoorTypes[1].name:
                 setDoorStyleImgPath(fivePieceDoorTypes[1].imgPath);
+                setSelectedDoorType(fivePieceDoorTypes[1].name);
                 break;
             case fivePieceDoorTypes[2].name:
                 setDoorStyleImgPath(fivePieceDoorTypes[2].imgPath);
+                setSelectedDoorType(fivePieceDoorTypes[2].name);
                 break;
             default:
                 console.log(console.error);
@@ -389,11 +404,13 @@ const CreateQuoteForm = ({ user }) => {
         if (e.target.value === "One Piece") {
             setDoorList(onePieceDoorTypes);
             setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+            setSelectedDoorType(onePieceDoorTypes[0].name);
             setWoodTypeList(woodTypesForOnePiece);
             setWoodType("MDF");
         } else {
             setDoorList(fivePieceDoorTypes);
             setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+            setSelectedDoorType(fivePieceDoorTypes[0].name);
             setWoodTypeList(woodTypesForFivePiece);
         }
     };
@@ -1551,14 +1568,6 @@ const CreateQuoteForm = ({ user }) => {
                         </div>
                     </div>
                     <div className="justify-end sm:flex sm:items-center mt-4 border-b border-gray-900/10 mb-10">
-                        {/* <div className="sm:flex-auto">
-                            <h1 className="text-base font-semibold text-gray-900">
-                                Door Fields
-                            </h1>
-                            <p className="mt-2 text-sm text-gray-700">
-                                List all of your doors here.
-                            </p>
-                        </div> */}
                         {doorEntries.length < 25 && (
                             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none  ">
                                 <button
@@ -1596,21 +1605,10 @@ const CreateQuoteForm = ({ user }) => {
                                 title="Door Style"
                                 content={
                                     selectedConstructionType === "One Piece"
-                                        ? `${selectedConstructionType} ${selectedDoorType}-${woodType}`
-                                        : `${selectedConstructionType} - ${woodType} - ${selectedDoorType} -  ${centerPanel} Center Panels`
+                                        ? `${selectedConstructionType} - ${woodType} ${selectedDoorType}`
+                                        : `${selectedConstructionType} - ${woodType} ${selectedDoorType}   with  ${centerPanel} Center Panels`
                                 }
                             ></AddressCard>
-                        </div>
-                        <div className="sm:col-span-4">
-                            <LabelWithHintRight
-                                value="Job Name/PO"
-                                hint="Required"
-                                name="po_number"
-                                id="po_number"
-                                type="text"
-                                placeholder=""
-                                className="text-xs"
-                            />
                         </div>
                     </div>
                 </div>
