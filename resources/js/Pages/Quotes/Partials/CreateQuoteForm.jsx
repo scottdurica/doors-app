@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useState, useReducer } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 import Checkbox from "@/Components/Checkbox";
@@ -277,32 +276,194 @@ const tenBlankRows = [
     },
 ];
 
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "setQuoteType":
+            return { ...state, quoteType: action.value };
+        case "setJobName":
+            return { ...state, jobName: action.payload };
+        case "shipOption":
+            return { ...state, shipOption: action.value };
+        case "constructionType":
+            if (action.value === "One Piece") {
+                return {
+                    ...state,
+                    constructionType: "One Piece",
+                    doorList: onePieceDoorTypes,
+                    doorImage: onePieceDoorTypes[0].imgPath,
+                    doorType: onePieceDoorTypes[0].name,
+                    woodList: woodTypesForOnePiece,
+                    woodType: "MDF",
+                };
+            }
+            return {
+                ...state,
+                constructionType: "Five Piece",
+                doorList: fivePieceDoorTypes,
+                doorImage: fivePieceDoorTypes[0].imgPath,
+                doorType: fivePieceDoorTypes[0].name,
+                woodList: woodTypesForFivePiece,
+            };
+        case "doorType":
+            const style = action.value;
+            let path = "";
+            let name = "";
+            switch (style) {
+                case onePieceDoorTypes[0].name:
+                    path = onePieceDoorTypes[0].imgPath;
+                    name = onePieceDoorTypes[0].name;
+                    break;
+                case onePieceDoorTypes[1].name:
+                    path = onePieceDoorTypes[1].imgPath;
+                    name = onePieceDoorTypes[1].name;
+                    break;
+                case onePieceDoorTypes[2].name:
+                    path = onePieceDoorTypes[2].imgPath;
+                    name = onePieceDoorTypes[2].name;
+                    break;
+                case onePieceDoorTypes[3].name:
+                    path = onePieceDoorTypes[3].imgPath;
+                    name = onePieceDoorTypes[3].name;
+                    break;
+                case onePieceDoorTypes[4].name:
+                    path = onePieceDoorTypes[4].imgPath;
+                    name = onePieceDoorTypes[4].name;
+                    break;
+                case onePieceDoorTypes[5].name:
+                    path = onePieceDoorTypes[5].imgPath;
+                    name = onePieceDoorTypes[5].name;
+                    break;
+                case onePieceDoorTypes[6].name:
+                    path = onePieceDoorTypes[6].imgPath;
+                    name = onePieceDoorTypes[6].name;
+                    break;
+                case onePieceDoorTypes[7].name:
+                    path = onePieceDoorTypes[7].imgPath;
+                    name = onePieceDoorTypes[7].name;
+                    break;
+                case onePieceDoorTypes[8].name:
+                    path = onePieceDoorTypes[8].imgPath;
+                    name = onePieceDoorTypes[8].name;
+                    break;
+                case onePieceDoorTypes[9].name:
+                    path = onePieceDoorTypes[9].imgPath;
+                    name = onePieceDoorTypes[9].name;
+                    break;
+                case onePieceDoorTypes[10].name:
+                    path = onePieceDoorTypes[10].imgPath;
+                    name = onePieceDoorTypes[10].name;
+                    break;
+                case onePieceDoorTypes[11].name:
+                    path = onePieceDoorTypes[11].imgPath;
+                    name = onePieceDoorTypes[11].name;
+                    break;
+                case onePieceDoorTypes[12].name:
+                    path = onePieceDoorTypes[12].imgPath;
+                    name = onePieceDoorTypes[12].name;
+                    break;
+                case onePieceDoorTypes[13].name:
+                    path = onePieceDoorTypes[13].imgPath;
+                    name = onePieceDoorTypes[13].name;
+                    break;
+                case onePieceDoorTypes[14].name:
+                    path = onePieceDoorTypes[14].imgPath;
+                    name = onePieceDoorTypes[14].name;
+                    break;
+                case onePieceDoorTypes[15].name:
+                    path = onePieceDoorTypes[15].imgPath;
+                    name = onePieceDoorTypes[15].name;
+                    break;
+                case fivePieceDoorTypes[0].name:
+                    path = fivePieceDoorTypes[0].imgPath;
+                    name = fivePieceDoorTypes[0].name;
+                    break;
+                case fivePieceDoorTypes[1].name:
+                    path = fivePieceDoorTypes[1].imgPath;
+                    name = fivePieceDoorTypes[1].name;
+                    break;
+                case fivePieceDoorTypes[2].name:
+                    path = fivePieceDoorTypes[2].imgPath;
+                    name = fivePieceDoorTypes[2].name;
+                    break;
+                default:
+                    console.log(console.error);
+            }
+            return { ...state, doorImage: path, doorType: name };
+        case "woodType":
+            return { ...state, woodType: action.value };
+        case "rsWidth":
+            return { ...state, rsWidth: action.value };
+        case "centerPanel":
+            return { ...state, centerPanel: action.value };
+        case "rrWidth":
+            return { ...state, rrWidth: action.value };
+        case "outsideEdge":
+            return { ...state, outsideEdge: action.value };
+        case "boreOption":
+            return { ...state, boreOption: action.value };
+        case "boreDistance":
+            return { ...state, boreDistance: action.value };
+        case "supplyHinges":
+            return { ...state, supplyHinges: action.value };
+        case "hingeType":
+            return { ...state, hingeType: action.value };
+        case "finishOption":
+            return { ...state, finishOption: action.value };
+        case "doorEntries":
+            return {...state, doorEntries: }
+        default:
+            throw new Error();
+    }
+};
 const CreateQuoteForm = ({ user }) => {
-    const [quoteType, setQuoteType] = useState("Quote");
-    const [pickupOptionVal, setPickupOptionVal] = useState("ship");
-    const [selectedDoorType, setSelectedDoorType] = useState(
-        onePieceDoorTypes[0].name
-    );
-    const [selectedConstructionType, setSelectedConstructionType] =
-        useState("One Piece");
-    const [doorStyleImgPath, setDoorStyleImgPath] = useState(
-        onePieceDoorTypes[0].imgPath
-    );
-    const [doorList, setDoorList] = useState(onePieceDoorTypes);
-    const [woodType, setWoodType] = useState("MDF");
-    const [woodTypeList, setWoodTypeList] = useState(woodTypesForOnePiece);
-    const [railStileWidth, setRailStileWidth] = useState(fractions[6]);
-    const [centerPanel, setCenterPanel] = useState("Flat(MDF)");
-    const [outsideEdge, setOutsideEdge] = useState();
-    const [rrWidth, setRRWidth] = useState("1");
-    const [hingeBoreOption, setHingeBoreOption] = useState("No Bore");
-    const [hingeBoreDistance, setHingeBoreDistance] = useState();
-    const [supplyHingeOption, setSupplyHingeOption] = useState();
-    const [hingeType, setHingeType] = useState();
-    const [finishOption, setFinishOption] = useState();
+    const quoteData = {
+        quoteType: "Quote",
+        shipOption: "ship",
+        jobName: "",
+        constructionType: "One Piece",
+        doorType: onePieceDoorTypes[0].name,
+        doorList: onePieceDoorTypes,
+        woodType: "MDF",
+        doorImage: onePieceDoorTypes[0].imgPath,
+        woodList: woodTypesForOnePiece,
+        rsWidth: fractions[5],
+        centerPanel: "Flat(MDF)",
+        rrWidth: fractions[1],
+        outsideEdge: "",
+        boreOption: "No Bore",
+        boreDistance: "",
+        supplyHinges: "",
+        hingeType: "",
+        finishOption: "",
+        doorEntries: tenBlankRows,
+
+    };
+
+    const [state, dispatch] = useReducer(reducer, quoteData);
+
+    //const [quoteType, setQuoteType] = useState("Quote");
+    // const [pickupOptionVal, setPickupOptionVal] = useState("ship");
+    // const [doorType, setSelectedDoorType] = useState(onePieceDoorTypes[0].name);
+    // const [selectedConstructionType, setSelectedConstructionType] =
+    //     useState("One Piece");
+    // const [doorStyleImgPath, setDoorStyleImgPath] = useState(
+    //     onePieceDoorTypes[0].imgPath
+    // );
+    //const [doorList, setDoorList] = useState(onePieceDoorTypes);
+    // const [woodType, setWoodType] = useState("MDF");
+    // const [woodTypeList, setWoodTypeList] = useState(woodTypesForOnePiece);
+    // const [railStileWidth, setRailStileWidth] = useState(fractions[6]);
+    // const [centerPanel, setCenterPanel] = useState("Flat(MDF)");
+    // const [outsideEdge, setOutsideEdge] = useState();
+    // const [rrWidth, setRRWidth] = useState("1");
+    // const [hingeBoreOption, setHingeBoreOption] = useState("No Bore");
+    // const [hingeBoreDistance, setHingeBoreDistance] = useState();
+    // const [supplyHingeOption, setSupplyHingeOption] = useState();
+    // const [hingeType, setHingeType] = useState();
+    // const [finishOption, setFinishOption] = useState();
     const [doorEntries, setDoorEntries] = useState(tenBlankRows);
     const [hasGlassDoors, setHasGlassDoors] = useState("No");
-    const [poJobName, setPoJobName] = useState();
+    // const [poJobName, setPoJobName] = useState();
     const [shipToName, setShipToName] = useState(
         `${user.c_name.toUpperCase()} (${capitalize(user.fname)} ${capitalize(
             user.lname
@@ -310,113 +471,113 @@ const CreateQuoteForm = ({ user }) => {
     );
     const [street, setStreet] = useState(user.street);
     const [city, setCity] = useState(user.city);
-    const [state, setState] = useState(user.state);
+    const [us_state, setState] = useState(user.state);
     const [zip, setZip] = useState(user.zip);
 
     function capitalize(str) {
         return String(str).charAt(0).toUpperCase() + String(str).slice(1);
     }
-    const handleDoorStyleChange = (e) => {
-        const style = e.target.value;
-        switch (style) {
-            case onePieceDoorTypes[0].name:
-                setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[0].name);
-                break;
-            case onePieceDoorTypes[1].name:
-                setDoorStyleImgPath(onePieceDoorTypes[1].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[1].name);
-                break;
-            case onePieceDoorTypes[2].name:
-                setDoorStyleImgPath(onePieceDoorTypes[2].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[2].name);
-                break;
-            case onePieceDoorTypes[3].name:
-                setDoorStyleImgPath(onePieceDoorTypes[3].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[3].name);
-                break;
-            case onePieceDoorTypes[4].name:
-                setDoorStyleImgPath(onePieceDoorTypes[4].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[4].name);
-                break;
-            case onePieceDoorTypes[5].name:
-                setDoorStyleImgPath(onePieceDoorTypes[5].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[5].name);
-                break;
-            case onePieceDoorTypes[6].name:
-                setDoorStyleImgPath(onePieceDoorTypes[6].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[6].name);
-                break;
-            case onePieceDoorTypes[7].name:
-                setDoorStyleImgPath(onePieceDoorTypes[7].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[7].name);
-                break;
-            case onePieceDoorTypes[8].name:
-                setDoorStyleImgPath(onePieceDoorTypes[8].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[8].name);
-                break;
-            case onePieceDoorTypes[9].name:
-                setDoorStyleImgPath(onePieceDoorTypes[9].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[9].name);
-                break;
-            case onePieceDoorTypes[10].name:
-                setDoorStyleImgPath(onePieceDoorTypes[10].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[10].name);
-                break;
-            case onePieceDoorTypes[11].name:
-                setDoorStyleImgPath(onePieceDoorTypes[11].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[11].name);
-                break;
-            case onePieceDoorTypes[12].name:
-                setDoorStyleImgPath(onePieceDoorTypes[12].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[12].name);
-                break;
-            case onePieceDoorTypes[13].name:
-                setDoorStyleImgPath(onePieceDoorTypes[13].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[13].name);
-                break;
-            case onePieceDoorTypes[14].name:
-                setDoorStyleImgPath(onePieceDoorTypes[14].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[14].name);
-                break;
-            case onePieceDoorTypes[15].name:
-                setDoorStyleImgPath(onePieceDoorTypes[15].imgPath);
-                setSelectedDoorType(onePieceDoorTypes[15].name);
-                break;
-            case fivePieceDoorTypes[0].name:
-                setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
-                setSelectedDoorType(fivePieceDoorTypes[0].name);
-                break;
-            case fivePieceDoorTypes[1].name:
-                setDoorStyleImgPath(fivePieceDoorTypes[1].imgPath);
-                setSelectedDoorType(fivePieceDoorTypes[1].name);
-                break;
-            case fivePieceDoorTypes[2].name:
-                setDoorStyleImgPath(fivePieceDoorTypes[2].imgPath);
-                setSelectedDoorType(fivePieceDoorTypes[2].name);
-                break;
-            default:
-                console.log(console.error);
-        }
-    };
-    const handleConstructionTypeChange = (e) => {
-        setSelectedConstructionType(e.target.value);
-        if (e.target.value === "One Piece") {
-            setDoorList(onePieceDoorTypes);
-            setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
-            setSelectedDoorType(onePieceDoorTypes[0].name);
-            setWoodTypeList(woodTypesForOnePiece);
-            setWoodType("MDF");
-        } else {
-            setDoorList(fivePieceDoorTypes);
-            setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
-            setSelectedDoorType(fivePieceDoorTypes[0].name);
-            setWoodTypeList(woodTypesForFivePiece);
-        }
-    };
-    const handleWoodTypeChange = (e) => {
-        setWoodType(e.target.value);
-    };
+    // const handleDoorStyleChange = (e) => {
+    //     const style = e.target.value;
+    //     switch (style) {
+    //         case onePieceDoorTypes[0].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[0].name);
+    //             break;
+    //         case onePieceDoorTypes[1].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[1].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[1].name);
+    //             break;
+    //         case onePieceDoorTypes[2].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[2].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[2].name);
+    //             break;
+    //         case onePieceDoorTypes[3].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[3].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[3].name);
+    //             break;
+    //         case onePieceDoorTypes[4].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[4].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[4].name);
+    //             break;
+    //         case onePieceDoorTypes[5].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[5].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[5].name);
+    //             break;
+    //         case onePieceDoorTypes[6].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[6].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[6].name);
+    //             break;
+    //         case onePieceDoorTypes[7].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[7].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[7].name);
+    //             break;
+    //         case onePieceDoorTypes[8].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[8].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[8].name);
+    //             break;
+    //         case onePieceDoorTypes[9].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[9].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[9].name);
+    //             break;
+    //         case onePieceDoorTypes[10].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[10].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[10].name);
+    //             break;
+    //         case onePieceDoorTypes[11].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[11].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[11].name);
+    //             break;
+    //         case onePieceDoorTypes[12].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[12].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[12].name);
+    //             break;
+    //         case onePieceDoorTypes[13].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[13].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[13].name);
+    //             break;
+    //         case onePieceDoorTypes[14].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[14].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[14].name);
+    //             break;
+    //         case onePieceDoorTypes[15].name:
+    //             setDoorStyleImgPath(onePieceDoorTypes[15].imgPath);
+    //             setSelectedDoorType(onePieceDoorTypes[15].name);
+    //             break;
+    //         case fivePieceDoorTypes[0].name:
+    //             setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+    //             setSelectedDoorType(fivePieceDoorTypes[0].name);
+    //             break;
+    //         case fivePieceDoorTypes[1].name:
+    //             setDoorStyleImgPath(fivePieceDoorTypes[1].imgPath);
+    //             setSelectedDoorType(fivePieceDoorTypes[1].name);
+    //             break;
+    //         case fivePieceDoorTypes[2].name:
+    //             setDoorStyleImgPath(fivePieceDoorTypes[2].imgPath);
+    //             setSelectedDoorType(fivePieceDoorTypes[2].name);
+    //             break;
+    //         default:
+    //             console.log(console.error);
+    //     }
+    // };
+    // const handleConstructionTypeChange = (e) => {
+    //     setSelectedConstructionType(e.target.value);
+    //     if (e.target.value === "One Piece") {
+    //         setDoorList(onePieceDoorTypes);
+    //         setDoorStyleImgPath(onePieceDoorTypes[0].imgPath);
+    //         setSelectedDoorType(onePieceDoorTypes[0].name);
+    //         setWoodTypeList(woodTypesForOnePiece);
+    //         setWoodType("MDF");
+    //     } else {
+    //         setDoorList(fivePieceDoorTypes);
+    //         setDoorStyleImgPath(fivePieceDoorTypes[0].imgPath);
+    //         setSelectedDoorType(fivePieceDoorTypes[0].name);
+    //         setWoodTypeList(woodTypesForFivePiece);
+    //     }
+    // };
+    // const handleWoodTypeChange = (e) => {
+    //     setWoodType(e.target.value);
+    // };
 
     const handleDoorSetChange = (e, index) => {
         const { name, value } = e.target;
@@ -511,31 +672,32 @@ const CreateQuoteForm = ({ user }) => {
         const quoteData = {
             user_id: user.id,
             quote_type: 1,
-            delivery_option: pickupOptionVal,
+            delivery_option: state.shipOption,
             c_name: user.c_name,
             f_name: user.fname,
             l_name: user.lname,
             street: street,
             city: city,
-            state: state,
+            state: us_state,
             zip: zip,
             phone: user.phone,
             email: user.email,
-            po_number: poJobName,
-            construction_type: selectedConstructionType,
-            style: selectedDoorType,
-            wood_type: woodType,
-            rs_size: railStileWidth,
-            rr_size: rrWidth,
-            outside_edge: outsideEdge,
-            hinge_option: hingeBoreOption,
-            hinge_distance: hingeBoreDistance,
-            finish: finishOption,
+            po_number: state.jobName,
+            construction_type: state.constructionType,
+            style: state.doorType,
+            wood_type: state.woodType,
+            rs_size: state.rsWidth,
+            rr_size: state.rrWidth,
+            outside_edge: state.outsideEdge,
+            hinge_option: state.boreOption,
+            hinge_distance: state.boreDistance,
+            finish: state.finishOption,
             supply_hinges: 1,
-            hinge_type: hingeType,
+            hinge_type: state.hingeType,
             notes: "this is the main temp notes.",
-            status: quoteType === "1" ? "Good to make" : "Pending approval",
-            doors: doorEntries,
+            status:
+                state.quoteType === "1" ? "Good to make" : "Pending approval",
+            doors: state.doorEntries,
         };
         try {
             const response = await axios.post("/quotes/save", quoteData);
@@ -567,12 +729,18 @@ const CreateQuoteForm = ({ user }) => {
                                 </p>
                                 <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
                                     <input
-                                        id="quote"
+                                        id="Quote"
                                         name="quotetype"
                                         type="radio"
                                         className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                        checked={quoteType === "Quote"}
-                                        onChange={(e) => setQuoteType("Quote")}
+                                        checked={state.quoteType === "Quote"}
+                                        //onChange={(e) => setQuoteType("Quote")}
+                                        onChange={(e) =>
+                                            dispatch({
+                                                type: "setQuoteType",
+                                                value: e.target.id,
+                                            })
+                                        }
                                     />
                                     <label
                                         htmlFor="quote"
@@ -581,12 +749,18 @@ const CreateQuoteForm = ({ user }) => {
                                         Quote
                                     </label>
                                     <input
-                                        id="order"
+                                        id="Order"
                                         name="quotetype"
                                         type="radio"
                                         className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                        checked={quoteType === "Order"}
-                                        onChange={(e) => setQuoteType("Order")}
+                                        checked={state.quoteType === "Order"}
+                                        //onChange={(e) => setQuoteType("Order")}
+                                        onChange={(e) =>
+                                            dispatch({
+                                                type: "setQuoteType",
+                                                value: e.target.id,
+                                            })
+                                        }
                                     />
                                     <label
                                         htmlFor="order"
@@ -606,8 +780,10 @@ const CreateQuoteForm = ({ user }) => {
                                 type="text"
                                 placeholder=""
                                 className="text-xs"
-                                inputVal={poJobName}
-                                onChange={(e) => setPoJobName(e.target.value)}
+                                inputVal={state.jobName}
+                                onChange={(e) => {
+                                    dispatch({ type: "setJobName" });
+                                }}
                             />
                         </div>
                     </div>
@@ -637,10 +813,18 @@ const CreateQuoteForm = ({ user }) => {
                                             name="shipoptions"
                                             type="radio"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                            checked={pickupOptionVal === "ship"}
-                                            onChange={(e) =>
-                                                setPickupOptionVal("ship")
+                                            checked={
+                                                state.shipOption === "ship"
                                             }
+                                            onChange={(e) =>
+                                                dispatch({
+                                                    type: "shipOption",
+                                                    value: e.target.id,
+                                                })
+                                            }
+                                            // onChange={(e) =>
+                                            //     setPickupOptionVal("ship")
+                                            // }
                                         />
                                         <label
                                             htmlFor="ship"
@@ -656,11 +840,17 @@ const CreateQuoteForm = ({ user }) => {
                                             type="radio"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             checked={
-                                                pickupOptionVal === "deliver"
+                                                state.shipOption === "deliver"
                                             }
                                             onChange={(e) =>
-                                                setPickupOptionVal("deliver")
+                                                dispatch({
+                                                    type: "shipOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setPickupOptionVal("deliver")
+                                            // }
                                         />
                                         <label
                                             htmlFor="deliver"
@@ -676,11 +866,17 @@ const CreateQuoteForm = ({ user }) => {
                                             type="radio"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             checked={
-                                                pickupOptionVal === "pickup"
+                                                state.shipOption === "pickup"
                                             }
                                             onChange={(e) =>
-                                                setPickupOptionVal("pickup")
+                                                dispatch({
+                                                    type: "shipOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setPickupOptionVal("pickup")
+                                            // }
                                         />
                                         <label
                                             htmlFor="pickup"
@@ -692,7 +888,7 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </fieldset>
                         </div>
-                        {pickupOptionVal === "pickup" && (
+                        {state.shipOption === "pickup" && (
                             <div className="sm:col-span-4">
                                 <AddressCard
                                     title="Pickup from:"
@@ -700,77 +896,15 @@ const CreateQuoteForm = ({ user }) => {
                                 ></AddressCard>
                             </div>
                         )}
-                        {/* {pickupOptionVal !== "pickup" &&
-                            isAddressGood === true && (
-                                <>
-                                    <div className="sm:col-span-4 ">
-                                        <AddressCard
-                                            title={
-                                                pickupOptionVal === "ship"
-                                                    ? "Ship to:"
-                                                    : "Deliver to:"
-                                            }
-                                            content={`${user.street}, ${user.city} ${user.state} ${user.zip}`}
-                                        ></AddressCard>
-                                    </div>
-                                    <div className="sm:col-span-4">
-                                        <fieldset>
-                                            <div className="mt-6 space-y-6 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                                                <div className="flex items-center">
-                                                    <input
-                                                        id="good"
-                                                        name="addressoptions"
-                                                        type="radio"
-                                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                                        checked={
-                                                            isAddressGood ===
-                                                            true
-                                                        }
-                                                        onChange={(e) =>
-                                                            setIsAddressGood(
-                                                                true
-                                                            )
-                                                        }
-                                                    />
-                                                    <label
-                                                        htmlFor="good"
-                                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                                    >
-                                                        This address is correct
-                                                    </label>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        id="setnewaddress"
-                                                        name="addressoptions"
-                                                        type="radio"
-                                                        className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                                        checked={
-                                                            isAddressGood ===
-                                                            false
-                                                        }
-                                                        onChange={(e) =>
-                                                            setIsAddressGood(
-                                                                false
-                                                            )
-                                                        }
-                                                    />
-                                                    <label
-                                                        htmlFor="setnewaddress"
-                                                        className="ml-3 block text-sm/6 font-medium text-gray-900"
-                                                    >
-                                                        Ship them somewhere else
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </>
-                            )} */}
-                        {pickupOptionVal !== "pickup" && (
+
+                        {state.shipOption !== "pickup" && (
                             <div className="sm:col-span-4">
                                 <LabelWithHintRight
-                                    value="Ship To"
+                                    value={
+                                        state.shipOption === "ship"
+                                            ? "Ship To"
+                                            : "Deliver To"
+                                    }
                                     hint="Required"
                                     name="shiptoname"
                                     id="shiptoname"
@@ -809,7 +943,7 @@ const CreateQuoteForm = ({ user }) => {
                                     id="state"
                                     type="text"
                                     placeholder=""
-                                    inputVal={state}
+                                    inputVal={us_state}
                                     onChange={(e) => setState(e.target.value)}
                                 />
                                 <LabelWithHintRight
@@ -849,13 +983,19 @@ const CreateQuoteForm = ({ user }) => {
                             </label>
                             <div className="mt-0 grid grid-cols-1">
                                 <select
-                                    id="location"
-                                    name="location"
-                                    defaultValue="Canada"
+                                    id="contype"
+                                    name="contype"
+                                    defaultValue=""
                                     className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) =>
-                                        handleConstructionTypeChange(e)
+                                        dispatch({
+                                            type: "constructionType",
+                                            value: e.target.value,
+                                        })
                                     }
+                                    // onChange={(e) =>
+                                    //     handleConstructionTypeChange(e)
+                                    // }
                                 >
                                     <option>One Piece</option>
                                     <option>Five Piece</option>
@@ -875,13 +1015,19 @@ const CreateQuoteForm = ({ user }) => {
                                     <select
                                         id="location"
                                         name="location"
-                                        defaultValue={selectedDoorType}
+                                        defaultValue={state.doorType}
                                         className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
-                                        onChange={(e) =>
-                                            handleDoorStyleChange(e)
-                                        }
+                                        onChange={(e) => {
+                                            dispatch({
+                                                type: "doorType",
+                                                value: e.target.value,
+                                            });
+                                        }}
+                                        // onChange={(e) =>
+                                        //     handleDoorStyleChange(e)
+                                        // }
                                     >
-                                        {doorList.map((type) => (
+                                        {state.doorList.map((type) => (
                                             <option key={type.name}>
                                                 {type.name}
                                             </option>
@@ -892,7 +1038,7 @@ const CreateQuoteForm = ({ user }) => {
                         </div>
                         {/* Door style image */}
                         <div className="sm:col-span-3 h-auto max-w-full">
-                            <img src={doorStyleImgPath} alt="Image Here" />
+                            <img src={state.doorImage} alt="Image Here" />
                         </div>
                         {/* Wood type section */}
                         <div className="sm:col-span-4">
@@ -906,11 +1052,17 @@ const CreateQuoteForm = ({ user }) => {
                                 <select
                                     id="woodtype"
                                     name="woodtype"
-                                    defaultValue={woodType}
+                                    defaultValue={state.woodType}
                                     className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
-                                    onChange={(e) => handleWoodTypeChange(e)}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "woodType",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                    // onChange={(e) => handleWoodTypeChange(e)}
                                 >
-                                    {woodTypeList.map((type) => (
+                                    {state.woodList.map((type) => (
                                         <option key={type.name}>
                                             {type.name}
                                         </option>
@@ -933,8 +1085,14 @@ const CreateQuoteForm = ({ user }) => {
                                     // defaultValue={fractions[6]}
                                     className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) =>
-                                        setRailStileWidth(e.target.value)
+                                        dispatch({
+                                            type: "rsWidth",
+                                            value: e.target.value,
+                                        })
                                     }
+                                    // onChange={(e) =>
+                                    //     setRailStileWidth(e.target.value)
+                                    // }
                                 >
                                     {fractions.map((size) => (
                                         <option key={size}>{size}</option>
@@ -955,7 +1113,13 @@ const CreateQuoteForm = ({ user }) => {
                                     name="rrwidth"
                                     // defaultValue={fractions[6]}
                                     className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
-                                    onChange={(e) => setRRWidth(e.target.value)}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "rrWidth",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                    // onChange={(e) => setRRWidth(e.target.value)}
                                 >
                                     {fractions.map((size, index) => (
                                         <option key={`${size}-${index}`}>
@@ -965,7 +1129,7 @@ const CreateQuoteForm = ({ user }) => {
                                 </select>
                             </div>
                         </div>
-                        {selectedConstructionType === "Five Piece" && (
+                        {state.constructionType === "Five Piece" && (
                             <div className="sm:col-span-4">
                                 <label
                                     htmlFor="centerpanel"
@@ -980,8 +1144,14 @@ const CreateQuoteForm = ({ user }) => {
                                         // defaultValue={fractions[6]}
                                         className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                         onChange={(e) =>
-                                            setCenterPanel(e.target.value)
+                                            dispatch({
+                                                type: "centerPanel",
+                                                value: e.target.value,
+                                            })
                                         }
+                                        // onChange={(e) =>
+                                        //     setCenterPanel(e.target.value)
+                                        // }
                                     >
                                         {centerPanelStyles.map((style) => (
                                             <option key={style}>{style}</option>
@@ -1004,8 +1174,14 @@ const CreateQuoteForm = ({ user }) => {
                                     // defaultValue={fractions[6]}
                                     className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) =>
-                                        setOutsideEdge(e.target.value)
+                                        dispatch({
+                                            type: "outsideEdge",
+                                            value: e.target.value,
+                                        })
                                     }
+                                    // onChange={(e) =>
+                                    //     setOutsideEdge(e.target.value)
+                                    // }
                                 >
                                     {outsideEdgeStyles.map((style) => (
                                         <option key={style}>{style}</option>
@@ -1044,13 +1220,19 @@ const CreateQuoteForm = ({ user }) => {
                                     <div className="flex items-center">
                                         <input
                                             defaultChecked="true"
-                                            id="primed"
+                                            id="Primed"
                                             type="radio"
                                             name="finishtype"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setFinishOption("Primed")
+                                                dispatch({
+                                                    type: "finishOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setFinishOption("Primed")
+                                            // }
                                         />
                                         <label
                                             htmlFor="primed"
@@ -1061,13 +1243,19 @@ const CreateQuoteForm = ({ user }) => {
                                     </div>
                                     <div className="flex items-center">
                                         <input
-                                            id="raw"
+                                            id="Raw"
                                             type="radio"
                                             name="finishtype"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setFinishOption("Raw")
+                                                dispatch({
+                                                    type: "finishOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setFinishOption("Raw")
+                                            // }
                                         />
                                         <label
                                             htmlFor="raw"
@@ -1078,15 +1266,21 @@ const CreateQuoteForm = ({ user }) => {
                                     </div>
                                     <div className="flex items-center">
                                         <input
-                                            id="fullfinish"
+                                            id="Full Finish"
                                             type="radio"
                                             name="finishtype"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setFinishOption(
-                                                    "Fully Finished"
-                                                )
+                                                dispatch({
+                                                    type: "finishOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setFinishOption(
+                                            //         "Full Finish"
+                                            //     )
+                                            // }
                                         />
                                         <label
                                             htmlFor="fullfinish"
@@ -1098,7 +1292,7 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </fieldset>
                         </div>
-                        {finishOption === "Fully Finished" && (
+                        {state.finishOption === "Fully Finished" && (
                             <div className="sm:col-span-4">
                                 <div className="mt-0 grid grid-cols-1">
                                     <LabelWithHintRight
@@ -1121,16 +1315,22 @@ const CreateQuoteForm = ({ user }) => {
                                 <div className="mt-2 mb-4 space-y-1 lg:flex lg:items-center lg:space-y-0 lg:space-x-10">
                                     <div className="flex items-center">
                                         <input
-                                            id="nobore"
+                                            id="No Bore"
                                             type="radio"
                                             name="boringoptions"
                                             checked={
-                                                hingeBoreOption === "No Bore"
+                                                state.boreOption === "No Bore"
                                             }
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setHingeBoreOption("No Bore")
+                                                dispatch({
+                                                    type: "boreOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setHingeBoreOption("No Bore")
+                                            // }
                                         />
                                         <label
                                             htmlFor="nobore"
@@ -1144,11 +1344,19 @@ const CreateQuoteForm = ({ user }) => {
                                             id="35mm"
                                             type="radio"
                                             name="boringoptions"
-                                            checked={hingeBoreOption === "35mm"}
+                                            checked={
+                                                state.boreOption === "35mm"
+                                            }
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setHingeBoreOption("35mm")
+                                                dispatch({
+                                                    type: "boreOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setHingeBoreOption("35mm")
+                                            // }
                                         />
                                         <label
                                             htmlFor="35mm"
@@ -1159,19 +1367,25 @@ const CreateQuoteForm = ({ user }) => {
                                     </div>
                                     <div className="flex items-center">
                                         <input
-                                            id="35mmdow"
+                                            id="35mm with dowels"
                                             type="radio"
                                             name="boringoptions"
                                             checked={
-                                                hingeBoreOption ===
-                                                "35mm With dowels"
+                                                state.boreOption ===
+                                                "35mm with dowels"
                                             }
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setHingeBoreOption(
-                                                    "35mm With dowels"
-                                                )
+                                                dispatch({
+                                                    type: "boreOption",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setHingeBoreOption(
+                                            //         "35mm With dowels"
+                                            //     )
+                                            // }
                                         />
                                         <label
                                             htmlFor="35mmdow"
@@ -1183,7 +1397,7 @@ const CreateQuoteForm = ({ user }) => {
                                 </div>
                             </fieldset>
                         </div>
-                        {hingeBoreOption !== "No Bore" && (
+                        {state.boreOption !== "No Bore" && (
                             <div className="sm:col-span-4">
                                 <div className="mt-0 grid grid-cols-1">
                                     <LabelWithHintRight
@@ -1193,10 +1407,16 @@ const CreateQuoteForm = ({ user }) => {
                                         id="hingeboredistance"
                                         type=""
                                         placeholder=""
-                                        inputVal={hingeBoreDistance}
+                                        inputVal={state.boreDistance}
                                         onChange={(e) =>
-                                            setHingeBoreDistance(e.target.value)
+                                            dispatch({
+                                                type: "boreDistance",
+                                                value: e.target.value,
+                                            })
                                         }
+                                        // onChange={(e) =>
+                                        //     setHingeBoreDistance(e.target.value)
+                                        // }
                                     />
                                 </div>
                             </div>
@@ -1257,13 +1477,19 @@ const CreateQuoteForm = ({ user }) => {
                                     <div className="flex items-center">
                                         <input
                                             defaultChecked="true"
-                                            id="no"
+                                            id="No"
                                             type="radio"
                                             name="hingesupply"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setSupplyHingeOption("No")
+                                                dispatch({
+                                                    type: "supplyHinges",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setSupplyHingeOption("No")
+                                            // }
                                         />
                                         <label
                                             htmlFor="no"
@@ -1274,13 +1500,19 @@ const CreateQuoteForm = ({ user }) => {
                                     </div>
                                     <div className="flex items-center">
                                         <input
-                                            id="yes"
+                                            id="Yes"
                                             type="radio"
                                             name="hingesupply"
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                             onChange={(e) =>
-                                                setSupplyHingeOption("Yes")
+                                                dispatch({
+                                                    type: "supplyHinges",
+                                                    value: e.target.id,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setSupplyHingeOption("Yes")
+                                            // }
                                         />
                                         <label
                                             htmlFor="yes"
@@ -1293,7 +1525,7 @@ const CreateQuoteForm = ({ user }) => {
                             </fieldset>
                         </div>
                         {/* Hinge type selectbox */}
-                        {supplyHingeOption === "Yes" && (
+                        {state.supplyHinges === "Yes" && (
                             <div className="sm:col-span-4">
                                 <div className="sm:col-span-4">
                                     <label
@@ -1309,8 +1541,14 @@ const CreateQuoteForm = ({ user }) => {
                                             defaultValue={hingeTypes[0]}
                                             className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                             onChange={(e) =>
-                                                setHingeType(e.target.value)
+                                                dispatch({
+                                                    type: "hingeType",
+                                                    value: e.target.value,
+                                                })
                                             }
+                                            // onChange={(e) =>
+                                            //     setHingeType(e.target.value)
+                                            // }
                                         >
                                             {hingeTypes.map((type) => (
                                                 <option key={type}>
@@ -1403,7 +1641,7 @@ const CreateQuoteForm = ({ user }) => {
                                             >
                                                 RR
                                             </th>
-                                            {hingeBoreOption !== "No Bore" && (
+                                            {state.boreOption !== "No Bore" && (
                                                 <th
                                                     scope="col"
                                                     className="py-0 pr-3 pl-3 text-center text-sm font-semibold text-gray-900 sm:pr-3 w-8"
@@ -1428,7 +1666,7 @@ const CreateQuoteForm = ({ user }) => {
                                     {/*                                   {"quantity":4,"width":12,"height":14,"type":"door","slab":1,"rails":2.25,"stiles":2,"notes":"This is a note about the doors","bore":0}]
                                      */}
                                     <tbody className="divide-y divide-gray-300 bg-white">
-                                        {doorEntries.map((row, index) => (
+                                        {state.doorEntries.map((row, index) => (
                                             <tr
                                                 key={index}
                                                 className="divide-x divide-gray-200"
@@ -1518,7 +1756,7 @@ const CreateQuoteForm = ({ user }) => {
                                                         }
                                                     ></Checkbox>
                                                 </td>
-                                                {hingeBoreOption !==
+                                                {state.boreOption !==
                                                     "No Bore" && (
                                                     <td className="text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 text-center">
                                                         <Checkbox
@@ -1568,7 +1806,7 @@ const CreateQuoteForm = ({ user }) => {
                         </div>
                     </div>
                     <div className="justify-end sm:flex sm:items-center mt-4 border-b border-gray-900/10 mb-10">
-                        {doorEntries.length < 25 && (
+                        {state.doorEntries.length < 25 && (
                             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none  ">
                                 <button
                                     type="button"
@@ -1597,16 +1835,16 @@ const CreateQuoteForm = ({ user }) => {
                         <div className="sm:col-span-4">
                             <AddressCard
                                 title="Quote or Order?"
-                                content={quoteType}
+                                content={state.quoteType}
                             ></AddressCard>
                         </div>
                         <div className="sm:col-span-4">
                             <AddressCard
                                 title="Door Style"
                                 content={
-                                    selectedConstructionType === "One Piece"
-                                        ? `${selectedConstructionType} - ${woodType} ${selectedDoorType}`
-                                        : `${selectedConstructionType} - ${woodType} ${selectedDoorType}   with  ${centerPanel} Center Panels`
+                                    state.constructionType === "One Piece"
+                                        ? `${state.constructionType} - ${state.woodType} ${state.doorType}`
+                                        : `${state.constructionType} - ${state.woodType} ${state.doorType}   with  ${state.centerPanel} Center Panels`
                                 }
                             ></AddressCard>
                         </div>
