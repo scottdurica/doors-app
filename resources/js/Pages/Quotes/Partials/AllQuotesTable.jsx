@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@inertiajs/react";
 
 const AllQuotesTable = ({ quotes }) => {
     return (
@@ -32,7 +33,14 @@ const AllQuotesTable = ({ quotes }) => {
                             >
                                 {quote.readable_date}
                             </th>
-                            <td className="px-6 py-4">{quote.po_number}</td>
+                            <td className="px-6 py-4">
+                                <Link
+                                    href={route("quotes.viewQuote", quote.id)}
+                                    data={{ quote_id: quote.id }}
+                                >
+                                    {quote.po_number}
+                                </Link>
+                            </td>
                             <td className="px-6 py-4">{quote.style}</td>
                             <td className="px-6 py-4">{quote.finish}</td>
                         </tr>

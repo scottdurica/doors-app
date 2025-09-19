@@ -22,10 +22,25 @@ class QuoteController extends Controller
             ]);
         }
 
+
+    
+
         public function create() {
             return Inertia::render('Quotes/Create', [
-                'user' => Auth::user()
+                'user' => Auth::user(),
             ]);
+        }
+
+        public function viewQuote(Request $request, Quote $quote) {
+            $quote_id = $request->query('quote_id');
+            return Inertia::render('Quotes/Create', [
+                'user' => Auth::user(),
+                // 'user' => $user,
+                'quote_id' => $quote_id
+            ]);
+        }
+        public function show( Quote $quote ) {
+            echo('getting here!!!!!!!!!!!!!!!!!!!!!!!!');
         }
 
         public function store (Request $request) {

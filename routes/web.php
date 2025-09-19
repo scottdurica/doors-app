@@ -1,10 +1,11 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -20,7 +21,15 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/quotes/requested-quote/{quote}', [QuoteController::class, 'requested_quote']);
     Route::get('/quotes/create', [QuoteController::class, 'create'])->name('quotes.create');
+    Route::get( '/quotes/{id}', [QuoteController::class, 'viewQuote'])->name('quotes.viewQuote');
+    // Route::get('/quotes/quote/{id}', function ($id) {
+    //     return Inertia::render('Quotes/create', [
+    //             'user' => Auth::user(),
+    //             'quote_id' => $id
+    //         ]);
+    // } )->name('quotes.viewQuote');
     Route::post('/quotes/save', [QuoteController::class, 'store'])->name('quotes.store');
     Route::get('/quotes', [QuoteController::class, 'index'])->name('quotes.index');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

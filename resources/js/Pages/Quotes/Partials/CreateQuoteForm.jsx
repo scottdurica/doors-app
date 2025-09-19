@@ -1,7 +1,8 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect, useParams } from "react";
 import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 import Checkbox from "@/Components/Checkbox";
+import axios from "axios";
 
 const onePieceDoorTypes = [
     {
@@ -122,7 +123,6 @@ const centerPanelStyles = [
     "RP-Cove(Solid Wood)",
     "RP-Step Bead(Solid Wood)",
 ];
-const hingeBoreOptions = ["No Bore", "35mm cup", "35mm cup with dowels"];
 const woodTypesForOnePiece = [{ name: "MDF" }];
 const woodTypesForFivePiece = [
     { name: "MDF" },
@@ -145,13 +145,6 @@ const hingeTypes = [
     'Frameless - full-overlay (5/8")',
     'Frameless - partial overlay (1/4")',
     'Frameless - inset (1/16" gap)',
-];
-const doorListDoorTypes = [
-    "Door",
-    "Drawer Front",
-    "Panel",
-    "Glass",
-    "Glass w/lites",
 ];
 const tenBlankRows = [
     {
@@ -281,7 +274,7 @@ const reducer = (state, action) => {
         case "setQuoteType":
             return { ...state, quoteType: action.value };
         case "setJobName":
-            return { ...state, jobName: action.payload };
+            return { ...state, jobName: action.value };
         case "shipOption":
             return { ...state, shipOption: action.value };
         case "constructionType":
@@ -406,16 +399,101 @@ const reducer = (state, action) => {
         case "supplyHinges":
             return { ...state, supplyHinges: action.value };
         case "hingeType":
+            console.log(action.value);
             return { ...state, hingeType: action.value };
         case "finishOption":
+            console.log(action.value);
             return { ...state, finishOption: action.value };
         case "doorEntries":
-            return {...state, doorEntries: }
+            const nameVal = action.name;
+            const value = action.value;
+            const index = action.index;
+            const newDoorEntries = [...state.doorEntries];
+            // const { nameVal, value } = e.target;
+            switch (nameVal) {
+                case "height":
+                    if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                        //const newDoorEntries = [...state.doorEntries];
+                        newDoorEntries[index][nameVal] = value;
+                        newDoorEntries[index]["sf"] = (
+                            (newDoorEntries[index]["width"] *
+                                value *
+                                newDoorEntries[index]["qty"]) /
+                            144
+                        ).toFixed(3);
+                        return { ...state, doorEntries: newDoorEntries };
+                        //setDoorEntries(newDoorEntries);
+                    } else {
+                        console.log("Incorrect input in height field.");
+                    }
+                    break;
+                case "width":
+                    // if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                    if (value.match(/^(\d*\.?\d{0,4})$/)) {
+                        //const newDoorEntries = [...state.doorEntries];
+                        newDoorEntries[index][nameVal] = value;
+                        newDoorEntries[index]["sf"] = (
+                            (newDoorEntries[index]["height"] *
+                                value *
+                                newDoorEntries[index]["qty"]) /
+                            144
+                        ).toFixed(3);
+                        return { ...state, doorEntries: newDoorEntries };
+                        //setDoorEntries(newDoorEntries);
+                    } else {
+                        console.log("Incorrect input in width field.");
+                    }
+                    break;
+                case "qty":
+                    if (value.match(/^(\d{1,2})$/)) {
+                        //const newDoorEntries = [...state.doorEntries];
+                        newDoorEntries[index][nameVal] = value;
+                        newDoorEntries[index]["sf"] = (
+                            (newDoorEntries[index]["height"] *
+                                value *
+                                newDoorEntries[index]["width"]) /
+                            144
+                        ).toFixed(3);
+                        return { ...state, doorEntries: newDoorEntries };
+                        //setDoorEntries(newDoorEntries);
+                    } else {
+                        console.log("Incorrect input in width field.");
+                    }
+                    break;
+                case "notes":
+                    //const newDoorEntries = [...state.doorEntries];
+                    const clean_value = value.replace(/<[^>]*>/g, "");
+                    newDoorEntries[index][nameVal] = clean_value;
+                    return { ...state, doorEntries: newDoorEntries };
+                    //setDoorEntries(newDoorEntries);
+                    //console.log(`Value of Note: ${clean_value}`);
+
+                    break;
+                case "glass":
+                    newDoorEntries[index][nameVal] = value;
+                    return { ...state, doorEntries: newDoorEntries };
+                case "slab":
+                    newDoorEntries[index][nameVal] = value;
+                    return { ...state, doorEntries: newDoorEntries };
+                case "rr":
+                    newDoorEntries[index][nameVal] = value;
+                    return { ...state, doorEntries: newDoorEntries };
+                case "bore":
+                    newDoorEntries[index][nameVal] = value;
+                    return { ...state, doorEntries: newDoorEntries };
+                default: {
+                    return console.log("Error with the doorset");
+                }
+            }
+
         default:
-            throw new Error();
+            throw new Error("method not defined in reducer");
     }
 };
-const CreateQuoteForm = ({ user }) => {
+
+const CreateQuoteForm = ({ user, quote_id }) => {
+    console.log(`val of quote_id ${quote_id}`);
+    console.log(`val of USER ${user}`);
     const quoteData = {
         quoteType: "Quote",
         shipOption: "ship",
@@ -429,17 +507,23 @@ const CreateQuoteForm = ({ user }) => {
         rsWidth: fractions[5],
         centerPanel: "Flat(MDF)",
         rrWidth: fractions[1],
-        outsideEdge: "",
+        outsideEdge: "None",
         boreOption: "No Bore",
-        boreDistance: "",
-        supplyHinges: "",
-        hingeType: "",
-        finishOption: "",
+        boreDistance: "0",
+        supplyHinges: "No",
+        hingeType: "None",
+        finishOption: "Primed",
         doorEntries: tenBlankRows,
-
     };
 
     const [state, dispatch] = useReducer(reducer, quoteData);
+    const [isLoading, setIsLoading] = useState();
+    const [saving, setIsSaving] = useState();
+    //see if quote id was sent through as url param
+    //const { id } = useParams();
+    // const isEdit = Boolean(id);
+    const [error, setError] = useState();
+    const [existingOrder, setExistingOrder] = useState({});
 
     //const [quoteType, setQuoteType] = useState("Quote");
     // const [pickupOptionVal, setPickupOptionVal] = useState("ship");
@@ -461,7 +545,7 @@ const CreateQuoteForm = ({ user }) => {
     // const [supplyHingeOption, setSupplyHingeOption] = useState();
     // const [hingeType, setHingeType] = useState();
     // const [finishOption, setFinishOption] = useState();
-    const [doorEntries, setDoorEntries] = useState(tenBlankRows);
+    // const [doorEntries, setDoorEntries] = useState(tenBlankRows);
     const [hasGlassDoors, setHasGlassDoors] = useState("No");
     // const [poJobName, setPoJobName] = useState();
     const [shipToName, setShipToName] = useState(
@@ -473,6 +557,42 @@ const CreateQuoteForm = ({ user }) => {
     const [city, setCity] = useState(user.city);
     const [us_state, setState] = useState(user.state);
     const [zip, setZip] = useState(user.zip);
+
+    useEffect(() => {
+        const active = true;
+        console.log("USEEFFECT");
+        console.log(quote_id);
+
+        //if this is undefined then it should be a blank quote
+        if (!quote_id) {
+            return;
+        }
+        // if (!isEdit) {
+        //     return;
+        // }
+        console.log("USEEFFECT AFTER FLAG");
+        const fetchData = async () => {
+            try {
+                const response = await axiosClient.post(
+                    `/requested-quote/${quote_id}`,
+                    {
+                        //send any necessary data needed by the controller
+                        //id : id
+                    }
+                );
+                console.log(`Response Data: ${response.data}`);
+                setExistingOrder(response.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // if (loading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error.message}</div>;
 
     function capitalize(str) {
         return String(str).charAt(0).toUpperCase() + String(str).slice(1);
@@ -579,79 +699,76 @@ const CreateQuoteForm = ({ user }) => {
     //     setWoodType(e.target.value);
     // };
 
-    const handleDoorSetChange = (e, index) => {
-        const { name, value } = e.target;
-        switch (name) {
-            case "height":
-                if (value.match(/^(\d*\.?\d{0,4})$/)) {
-                    const newDoorEntries = [...doorEntries];
-                    newDoorEntries[index][name] = value;
-                    newDoorEntries[index]["sf"] = (
-                        (newDoorEntries[index]["width"] *
-                            value *
-                            newDoorEntries[index]["qty"]) /
-                        144
-                    ).toFixed(3);
-                    setDoorEntries(newDoorEntries);
-                    console.log("Field Validated and updated");
-                } else {
-                    console.log("Incorrect input in width field.");
-                }
-                break;
-            case "width":
-                // if (value.match(/^(\d*\.?\d{0,4})$/)) {
-                if (value.match(/^(\d*\.?\d{0,4})$/)) {
-                    const newDoorEntries = [...doorEntries];
-                    newDoorEntries[index][name] = value;
-                    newDoorEntries[index]["sf"] = (
-                        (newDoorEntries[index]["height"] *
-                            value *
-                            newDoorEntries[index]["qty"]) /
-                        144
-                    ).toFixed(3);
-                    setDoorEntries(newDoorEntries);
-                    console.log("Field Validated and updated");
-                } else {
-                    console.log("Incorrect input in width field.");
-                }
-                break;
-            case "qty":
-                if (value.match(/^(\d{1,2})$/)) {
-                    const newDoorEntries = [...doorEntries];
-                    newDoorEntries[index][name] = value;
-                    newDoorEntries[index]["sf"] = (
-                        (newDoorEntries[index]["height"] *
-                            value *
-                            newDoorEntries[index]["width"]) /
-                        144
-                    ).toFixed(3);
-                    setDoorEntries(newDoorEntries);
-                    console.log("Field Validated and updated");
-                } else {
-                    console.log("Incorrect input in width field.");
-                }
-                break;
-            case "notes":
-                const newDoorEntries = [...doorEntries];
-                const clean_value = value.replace(/<[^>]*>/g, "");
-                newDoorEntries[index][name] = clean_value;
+    // const handleDoorSetChange = (e, index) => {
+    //     const { name, value } = e.target;
+    //     switch (name) {
+    //         case "height":
+    //             if (value.match(/^(\d*\.?\d{0,4})$/)) {
+    //                 const newDoorEntries = [...doorEntries];
+    //                 newDoorEntries[index][name] = value;
+    //                 newDoorEntries[index]["sf"] = (
+    //                     (newDoorEntries[index]["width"] *
+    //                         value *
+    //                         newDoorEntries[index]["qty"]) /
+    //                     144
+    //                 ).toFixed(3);
+    //                 setDoorEntries(newDoorEntries);
+    //             } else {
+    //                 console.log("Incorrect input in height field.");
+    //             }
+    //             break;
+    //         case "width":
+    //             // if (value.match(/^(\d*\.?\d{0,4})$/)) {
+    //             if (value.match(/^(\d*\.?\d{0,4})$/)) {
+    //                 const newDoorEntries = [...doorEntries];
+    //                 newDoorEntries[index][name] = value;
+    //                 newDoorEntries[index]["sf"] = (
+    //                     (newDoorEntries[index]["height"] *
+    //                         value *
+    //                         newDoorEntries[index]["qty"]) /
+    //                     144
+    //                 ).toFixed(3);
+    //                 setDoorEntries(newDoorEntries);
+    //             } else {
+    //                 console.log("Incorrect input in width field.");
+    //             }
+    //             break;
+    //         case "qty":
+    //             if (value.match(/^(\d{1,2})$/)) {
+    //                 const newDoorEntries = [...doorEntries];
+    //                 newDoorEntries[index][name] = value;
+    //                 newDoorEntries[index]["sf"] = (
+    //                     (newDoorEntries[index]["height"] *
+    //                         value *
+    //                         newDoorEntries[index]["width"]) /
+    //                     144
+    //                 ).toFixed(3);
+    //                 setDoorEntries(newDoorEntries);
+    //             } else {
+    //                 console.log("Incorrect input in width field.");
+    //             }
+    //             break;
+    //         case "notes":
+    //             const newDoorEntries = [...doorEntries];
+    //             const clean_value = value.replace(/<[^>]*>/g, "");
+    //             newDoorEntries[index][name] = clean_value;
 
-                setDoorEntries(newDoorEntries);
-                console.log(`Value of Note: ${clean_value}`);
+    //             setDoorEntries(newDoorEntries);
+    //             console.log(`Value of Note: ${clean_value}`);
 
-                break;
-        }
-        // console.log(name, value);
-        // const newDoorEntries = [...doorEntries];
-        // newDoorEntries[index][name] = value;
-        // console.log(newDoorEntries[index][name]);
-        // setDoorEntries(newDoorEntries);
-    };
+    //             break;
+    //     }
+    //     // console.log(name, value);
+    //     // const newDoorEntries = [...doorEntries];
+    //     // newDoorEntries[index][name] = value;
+    //     // console.log(newDoorEntries[index][name]);
+    //     // setDoorEntries(newDoorEntries);
+    // };
 
     const addDoorRows = () => {
         console.log(user);
         setDoorEntries([
-            ...doorEntries,
+            ...state.doorEntries,
             {
                 id: doorEntries.length + 1,
                 qty: "",
@@ -669,6 +786,10 @@ const CreateQuoteForm = ({ user }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // if (state.boreOption === "No Bore") {
+        //     dispatch({ type: "boreDistance", value: "Fuck Yeah!" });
+        // }
+
         const quoteData = {
             user_id: user.id,
             quote_type: 1,
@@ -697,8 +818,9 @@ const CreateQuoteForm = ({ user }) => {
             notes: "this is the main temp notes.",
             status:
                 state.quoteType === "1" ? "Good to make" : "Pending approval",
-            doors: state.doorEntries,
+            doors: deleteEmptyRows(state.doorEntries),
         };
+        console.log(`Value of state.jobName: ${state.jobName}`);
         try {
             const response = await axios.post("/quotes/save", quoteData);
             console.log("data saved-", response.data);
@@ -706,6 +828,10 @@ const CreateQuoteForm = ({ user }) => {
             console.error("Error saving data: ", error);
         }
     };
+    function deleteEmptyRows(doors) {
+        const noEmpties = doors.filter((door) => door.qty > 0);
+        return noEmpties;
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -772,7 +898,7 @@ const CreateQuoteForm = ({ user }) => {
                             </fieldset>
                         </div>
                         <div className="sm:col-span-4">
-                            <LabelWithHintRight
+                            {/* <LabelWithHintRight
                                 value="Job Name/PO"
                                 hint="Required"
                                 name="po_number"
@@ -784,7 +910,30 @@ const CreateQuoteForm = ({ user }) => {
                                 onChange={(e) => {
                                     dispatch({ type: "setJobName" });
                                 }}
-                            />
+                                /> */}
+                            <div className="flex justify-between mt-3">
+                                <label className="block text-xs font-medium text-gray-900">
+                                    Job Name/PO Number
+                                </label>
+                                <span className="text-xs text-gray-500">
+                                    Required
+                                </span>
+                            </div>
+                            <div className="mt-0 ">
+                                <input
+                                    id="po_number"
+                                    value={state.jobName}
+                                    name="po_number"
+                                    type="text"
+                                    className="block w-full rounded-sm bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                    onChange={(e) => {
+                                        dispatch({
+                                            type: "setJobName",
+                                            value: e.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1680,11 +1829,21 @@ const CreateQuoteForm = ({ user }) => {
                                                         id="qty"
                                                         name="qty"
                                                         value={row.qty}
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></input>
                                                 </td>
@@ -1695,11 +1854,21 @@ const CreateQuoteForm = ({ user }) => {
                                                         name="width"
                                                         type="text"
                                                         value={row.width}
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></input>
                                                 </td>
@@ -1710,11 +1879,21 @@ const CreateQuoteForm = ({ user }) => {
                                                         name="height"
                                                         type="text"
                                                         value={row.height}
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></input>
                                                 </td>
@@ -1723,11 +1902,23 @@ const CreateQuoteForm = ({ user }) => {
                                                         <Checkbox
                                                             id="glass"
                                                             name="glass"
+                                                            // onChange={(e) =>
+                                                            //     handleDoorSetChange(
+                                                            //         e,
+                                                            //         index
+                                                            //     )
+                                                            // }
                                                             onChange={(e) =>
-                                                                handleDoorSetChange(
-                                                                    e,
-                                                                    index
-                                                                )
+                                                                dispatch({
+                                                                    type: "doorEntries",
+                                                                    value: e
+                                                                        .target
+                                                                        .value,
+                                                                    name: e
+                                                                        .target
+                                                                        .name,
+                                                                    index: index,
+                                                                })
                                                             }
                                                         ></Checkbox>
                                                     </td>
@@ -1736,11 +1927,21 @@ const CreateQuoteForm = ({ user }) => {
                                                     <Checkbox
                                                         id="slab"
                                                         name="slab"
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></Checkbox>
                                                 </td>
@@ -1748,11 +1949,21 @@ const CreateQuoteForm = ({ user }) => {
                                                     <Checkbox
                                                         id="rr"
                                                         name="rr"
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></Checkbox>
                                                 </td>
@@ -1762,11 +1973,23 @@ const CreateQuoteForm = ({ user }) => {
                                                         <Checkbox
                                                             id="bore"
                                                             name="bore"
+                                                            // onChange={(e) =>
+                                                            //     handleDoorSetChange(
+                                                            //         e,
+                                                            //         index
+                                                            //     )
+                                                            // }
                                                             onChange={(e) =>
-                                                                handleDoorSetChange(
-                                                                    e,
-                                                                    index
-                                                                )
+                                                                dispatch({
+                                                                    type: "doorEntries",
+                                                                    value: e
+                                                                        .target
+                                                                        .value,
+                                                                    name: e
+                                                                        .target
+                                                                        .name,
+                                                                    index: index,
+                                                                })
                                                             }
                                                         ></Checkbox>
                                                     </td>
@@ -1779,11 +2002,21 @@ const CreateQuoteForm = ({ user }) => {
                                                         type="text"
                                                         maxLength="255"
                                                         value={row.notes}
+                                                        // onChange={(e) =>
+                                                        //     handleDoorSetChange(
+                                                        //         e,
+                                                        //         index
+                                                        //     )
+                                                        // }
                                                         onChange={(e) =>
-                                                            handleDoorSetChange(
-                                                                e,
-                                                                index
-                                                            )
+                                                            dispatch({
+                                                                type: "doorEntries",
+                                                                value: e.target
+                                                                    .value,
+                                                                name: e.target
+                                                                    .name,
+                                                                index: index,
+                                                            })
                                                         }
                                                     ></input>
                                                 </td>
