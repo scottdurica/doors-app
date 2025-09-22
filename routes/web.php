@@ -23,7 +23,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/quotes/requested-quote/{quote}', [QuoteController::class, 'requested_quote']);
     Route::get('/quotes/create', [QuoteController::class, 'create'])->name('quotes.create');
-    Route::get( '/quotes/{id}', [QuoteController::class, 'viewQuote'])->name('quotes.viewQuote');
+    Route::get( '/quotes/{quote}', [QuoteController::class, 'show'])->name('quotes.show');
     // Route::get('/quotes/quote/{id}', function ($id) {
     //     return Inertia::render('Quotes/create', [
     //             'user' => Auth::user(),

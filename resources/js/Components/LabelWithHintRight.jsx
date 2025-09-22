@@ -1,14 +1,14 @@
 import React from "react";
 
 const InputWithHintRight = ({
-    value,
+    l_value,
     className = " ",
     id,
     name,
     type,
     hint,
     placeholder,
-    inputVal,
+    value,
     onChange,
 }) => {
     return (
@@ -19,14 +19,14 @@ const InputWithHintRight = ({
                         `block text-xs font-medium text-gray-900 ` + className
                     }
                 >
-                    {value ? value : children}
+                    {l_value ? l_value : children}
                 </label>
                 <span className="text-xs text-gray-500">{hint}</span>
             </div>
             <div className="mt-0 ">
                 <input
                     id={id}
-                    value={inputVal}
+                    value={value}
                     name={name}
                     type={type}
                     placeholder={placeholder}

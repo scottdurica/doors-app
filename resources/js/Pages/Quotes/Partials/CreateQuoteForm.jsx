@@ -3,6 +3,7 @@ import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 import Checkbox from "@/Components/Checkbox";
 import axios from "axios";
+import { usePage } from "@inertiajs/react";
 
 const onePieceDoorTypes = [
     {
@@ -277,6 +278,14 @@ const reducer = (state, action) => {
             return { ...state, jobName: action.value };
         case "shipOption":
             return { ...state, shipOption: action.value };
+        case "street":
+            return { ...state, street: action.value };
+        case "city":
+            return { ...state, city: action.value };
+        case "state":
+            return { ...state, state: action.value };
+        case "zip":
+            return { ...state, zip: action.value };
         case "constructionType":
             if (action.value === "One Piece") {
                 return {
@@ -491,9 +500,13 @@ const reducer = (state, action) => {
     }
 };
 
-const CreateQuoteForm = ({ user, quote_id }) => {
-    console.log(`val of quote_id ${quote_id}`);
-    console.log(`val of USER ${user}`);
+const CreateQuoteForm = ({ user, quote }) => {
+    //console.log(`val of quote ${quote.id}`);
+    //console.log(JSON.stringify(quote, null, 2));
+    if (quote) {
+        //user wants to see the existing quote...
+        //set initial values of fields to the selected quote....
+    }
     const quoteData = {
         quoteType: "Quote",
         shipOption: "ship",
@@ -514,16 +527,20 @@ const CreateQuoteForm = ({ user, quote_id }) => {
         hingeType: "None",
         finishOption: "Primed",
         doorEntries: tenBlankRows,
+        street: user.street,
+        city: user.city,
+        state: user.state,
+        zip: user.zip,
     };
 
     const [state, dispatch] = useReducer(reducer, quoteData);
-    const [isLoading, setIsLoading] = useState();
-    const [saving, setIsSaving] = useState();
-    //see if quote id was sent through as url param
-    //const { id } = useParams();
-    // const isEdit = Boolean(id);
-    const [error, setError] = useState();
-    const [existingOrder, setExistingOrder] = useState({});
+    // const [isLoading, setIsLoading] = useState();
+    // const [saving, setIsSaving] = useState();
+    // //see if quote id was sent through as url param
+    // //const { id } = useParams();
+    // // const isEdit = Boolean(id);
+    // const [error, setError] = useState();
+    // const [existingOrder, setExistingOrder] = useState({});
 
     //const [quoteType, setQuoteType] = useState("Quote");
     // const [pickupOptionVal, setPickupOptionVal] = useState("ship");
@@ -553,43 +570,43 @@ const CreateQuoteForm = ({ user, quote_id }) => {
             user.lname
         )})`
     );
-    const [street, setStreet] = useState(user.street);
-    const [city, setCity] = useState(user.city);
-    const [us_state, setState] = useState(user.state);
-    const [zip, setZip] = useState(user.zip);
+    //const [street, setStreet] = useState(user.street);
+    // const [city, setCity] = useState(user.city);
+    // const [us_state, setState] = useState(user.state);
+    // const [zip, setZip] = useState(user.zip);
 
-    useEffect(() => {
-        const active = true;
-        console.log("USEEFFECT");
-        console.log(quote_id);
+    // useEffect(() => {
+    //     const active = true;
+    //     console.log("USEEFFECT");
+    //     //console.log(quote_id);
 
-        //if this is undefined then it should be a blank quote
-        if (!quote_id) {
-            return;
-        }
-        // if (!isEdit) {
-        //     return;
-        // }
-        console.log("USEEFFECT AFTER FLAG");
-        const fetchData = async () => {
-            try {
-                const response = await axiosClient.post(
-                    `/requested-quote/${quote_id}`,
-                    {
-                        //send any necessary data needed by the controller
-                        //id : id
-                    }
-                );
-                console.log(`Response Data: ${response.data}`);
-                setExistingOrder(response.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+    //     //if this is undefined then it should be a blank quote
+    //     if (!quote) {
+    //         return;
+    //     }
+    //     // if (!isEdit) {
+    //     //     return;
+    //     // }
+    //     console.log("USEEFFECT AFTER FLAG");
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axiosClient.post(
+    //                 `/requested-quote/${quote.id}`,
+    //                 {
+    //                     //send any necessary data needed by the controller
+    //                     //id : id
+    //                 }
+    //             );
+    //             console.log(`Response Data: ${response.data}`);
+    //             setExistingOrder(response.data);
+    //         } catch (err) {
+    //             setError(err);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+    //     fetchData();
+    // }, []);
 
     // if (loading) return <div>Loading...</div>;
     // if (error) return <div>Error: {error.message}</div>;
@@ -797,10 +814,10 @@ const CreateQuoteForm = ({ user, quote_id }) => {
             c_name: user.c_name,
             f_name: user.fname,
             l_name: user.lname,
-            street: street,
-            city: city,
-            state: us_state,
-            zip: zip,
+            street: state.street,
+            city: state.city,
+            state: state.state,
+            zip: state.zip,
             phone: user.phone,
             email: user.email,
             po_number: state.jobName,
@@ -1049,7 +1066,7 @@ const CreateQuoteForm = ({ user, quote_id }) => {
                         {state.shipOption !== "pickup" && (
                             <div className="sm:col-span-4">
                                 <LabelWithHintRight
-                                    value={
+                                    l_value={
                                         state.shipOption === "ship"
                                             ? "Ship To"
                                             : "Deliver To"
@@ -1059,51 +1076,70 @@ const CreateQuoteForm = ({ user, quote_id }) => {
                                     id="shiptoname"
                                     type="text"
                                     placeholder=""
-                                    inputVal={shipToName}
+                                    value={shipToName}
                                     onChange={(e) =>
                                         setShipToName(e.target.value)
                                     }
                                 />
 
                                 <LabelWithHintRight
-                                    value="Street"
+                                    l_value="Street"
                                     hint="Required"
                                     name="street"
                                     id="street"
                                     type="text"
-                                    placeholder=""
-                                    inputVal={street}
-                                    onChange={(e) => setStreet(e.target.value)}
+                                    value={state.street}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "street",
+                                            value: e.target.value,
+                                        })
+                                    }
                                 />
                                 <LabelWithHintRight
-                                    value="City"
+                                    l_value="City"
                                     hint="Required"
                                     name="city"
                                     id="city"
                                     type="text"
                                     placeholder=""
-                                    inputVal={city}
-                                    onChange={(e) => setCity(e.target.value)}
+                                    value={state.city}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "city",
+                                            value: e.target.value,
+                                        })
+                                    }
                                 />
                                 <LabelWithHintRight
-                                    value="State"
+                                    l_value="State"
                                     hint="Required"
                                     name="state"
                                     id="state"
                                     type="text"
                                     placeholder=""
-                                    inputVal={us_state}
-                                    onChange={(e) => setState(e.target.value)}
+                                    value={state.state}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "state",
+                                            value: e.target.value,
+                                        })
+                                    }
                                 />
                                 <LabelWithHintRight
-                                    value="Zip"
+                                    l_value="Zip"
                                     hint="Required"
                                     name="zip"
                                     id="zip"
                                     type="text"
                                     placeholder=""
-                                    inputVal={zip}
-                                    onChange={(e) => setZip(e.target.value)}
+                                    value={state.zip}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "zip",
+                                            value: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                         )}

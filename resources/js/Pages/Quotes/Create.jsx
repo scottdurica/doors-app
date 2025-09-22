@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import CreateQuoteForm from "./Partials/CreateQuoteForm";
 
-const Create = ({user}) => {
+const Create = ({ user, quote }) => {
     return (
         <AuthenticatedLayout
             header={
@@ -15,7 +15,7 @@ const Create = ({user}) => {
             }
         >
             <Head title="New Quote" />
-            <CreateQuoteForm user={user}></CreateQuoteForm>
+            <CreateQuoteForm user={user} quote={quote}></CreateQuoteForm>
         </AuthenticatedLayout>
     );
 };

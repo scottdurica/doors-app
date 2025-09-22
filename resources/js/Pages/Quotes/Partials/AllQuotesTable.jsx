@@ -35,8 +35,14 @@ const AllQuotesTable = ({ quotes }) => {
                             </th>
                             <td className="px-6 py-4">
                                 <Link
-                                    href={route("quotes.viewQuote", quote.id)}
-                                    data={{ quote_id: quote.id }}
+                                    href={route("quotes.show", {
+                                        quote: quote.id,
+                                    })}
+                                    // data={{ quote_id: quote.id }}
+                                    // href={route("quotes.viewQuote", {
+                                    //     quote: quote.id,
+                                    // })}
+                                    // data={{ quote_id: quote.id }}
                                 >
                                     {quote.po_number}
                                 </Link>

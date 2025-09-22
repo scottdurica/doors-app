@@ -24,6 +24,6 @@ class Quote extends Model
         ];
 
         public function getReadableDateAttribute() {
-            return $this->created_at->format('m-d-Y');
+           return $this->created_at->format('m-d-Y');
         }
     }
