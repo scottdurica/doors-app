@@ -19,7 +19,8 @@ const InputWithHintRight = ({
                         `block text-xs font-medium text-gray-900 ` + className
                     }
                 >
-                    {l_value ? l_value : children}
+                    {/* {l_value ? l_value : children} */}
+                    {l_value}
                 </label>
                 <span className="text-xs text-gray-500">{hint}</span>
             </div>

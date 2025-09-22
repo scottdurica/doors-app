@@ -3,7 +3,6 @@ import LabelWithHintRight from "@/Components/LabelWithHintRight";
 import AddressCard from "@/Components/AddressCard";
 import Checkbox from "@/Components/Checkbox";
 import axios from "axios";
-import { usePage } from "@inertiajs/react";
 
 const onePieceDoorTypes = [
     {
@@ -502,36 +501,87 @@ const reducer = (state, action) => {
 
 const CreateQuoteForm = ({ user, quote }) => {
     //console.log(`val of quote ${quote.id}`);
-    //console.log(JSON.stringify(quote, null, 2));
+    console.log(JSON.stringify(quote, null, 2));
     if (quote) {
         //user wants to see the existing quote...
         //set initial values of fields to the selected quote....
     }
-    const quoteData = {
-        quoteType: "Quote",
-        shipOption: "ship",
-        jobName: "",
-        constructionType: "One Piece",
-        doorType: onePieceDoorTypes[0].name,
-        doorList: onePieceDoorTypes,
-        woodType: "MDF",
-        doorImage: onePieceDoorTypes[0].imgPath,
-        woodList: woodTypesForOnePiece,
-        rsWidth: fractions[5],
-        centerPanel: "Flat(MDF)",
-        rrWidth: fractions[1],
-        outsideEdge: "None",
-        boreOption: "No Bore",
-        boreDistance: "0",
-        supplyHinges: "No",
-        hingeType: "None",
-        finishOption: "Primed",
-        doorEntries: tenBlankRows,
-        street: user.street,
-        city: user.city,
-        state: user.state,
-        zip: user.zip,
-    };
+    const quoteData = quote
+        ? {
+              quoteType: quote.quote_type,
+              shipOption: quote.delivery_option,
+              jobName: quote.po_number,
+              constructionType: quote.construction_type,
+              doorType: quote.style,
+              doorList: onePieceDoorTypes,
+              woodType: quote.wood_type,
+              doorImage: onePieceDoorTypes[0].imgPath,
+              woodList: woodTypesForOnePiece,
+              rsWidth: fractions[5],
+              centerPanel: "Flat(MDF)",
+              rrWidth: fractions[1], //
+              outsideEdge: quote.outside_edge,
+              boreOption: quote.hinge_option,
+              boreDistance: quote.hinge_distance,
+              supplyHinges: quote.supply_hinges,
+              hingeType: quote.hinge_type,
+              finishOption: quote.finish,
+              doorEntries: quote.doors,
+              street: quote.street,
+              city: quote.city,
+              state: quote.state,
+              zip: quote.zip,
+          }
+        : {
+              quoteType: "Quote",
+              shipOption: "ship",
+              jobName: "",
+              constructionType: "One Piece",
+              doorType: onePieceDoorTypes[0].name,
+              doorList: onePieceDoorTypes,
+              woodType: "MDF",
+              doorImage: onePieceDoorTypes[0].imgPath,
+              woodList: woodTypesForOnePiece,
+              rsWidth: fractions[5],
+              centerPanel: "Flat(MDF)",
+              rrWidth: fractions[1],
+              outsideEdge: "None",
+              boreOption: "No Bore",
+              boreDistance: "0",
+              supplyHinges: "No",
+              hingeType: "None",
+              finishOption: "Primed",
+              doorEntries: tenBlankRows,
+              street: user.street,
+              city: user.city,
+              state: user.state,
+              zip: user.zip,
+          };
+    // const quoteData = {
+    //     quoteType: "Quote",
+    //     shipOption: "ship",
+    //     jobName: "",
+    //     constructionType: "One Piece",
+    //     doorType: onePieceDoorTypes[0].name,
+    //     doorList: onePieceDoorTypes,
+    //     woodType: "MDF",
+    //     doorImage: onePieceDoorTypes[0].imgPath,
+    //     woodList: woodTypesForOnePiece,
+    //     rsWidth: fractions[5],
+    //     centerPanel: "Flat(MDF)",
+    //     rrWidth: fractions[1],
+    //     outsideEdge: "None",
+    //     boreOption: "No Bore",
+    //     boreDistance: "0",
+    //     supplyHinges: "No",
+    //     hingeType: "None",
+    //     finishOption: "Primed",
+    //     doorEntries: tenBlankRows,
+    //     street: user.street,
+    //     city: user.city,
+    //     state: user.state,
+    //     zip: user.zip,
+    // };
 
     const [state, dispatch] = useReducer(reducer, quoteData);
     // const [isLoading, setIsLoading] = useState();
@@ -876,7 +926,10 @@ const CreateQuoteForm = ({ user, quote }) => {
                                         name="quotetype"
                                         type="radio"
                                         className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                        checked={state.quoteType === "Quote"}
+                                        checked={
+                                            state.quoteType === "Quote" ||
+                                            state.quoteType == 0
+                                        }
                                         //onChange={(e) => setQuoteType("Quote")}
                                         onChange={(e) =>
                                             dispatch({
@@ -896,7 +949,10 @@ const CreateQuoteForm = ({ user, quote }) => {
                                         name="quotetype"
                                         type="radio"
                                         className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
-                                        checked={state.quoteType === "Order"}
+                                        checked={
+                                            state.quoteType === "Order" ||
+                                            state.quoteType == 1
+                                        }
                                         //onChange={(e) => setQuoteType("Order")}
                                         onChange={(e) =>
                                             dispatch({
@@ -1170,7 +1226,11 @@ const CreateQuoteForm = ({ user, quote }) => {
                                 <select
                                     id="contype"
                                     name="contype"
-                                    defaultValue=""
+                                    value={
+                                        state.constructionType === "five"
+                                            ? "Five Piece"
+                                            : "One Piece"
+                                    }
                                     className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                     onChange={(e) =>
                                         dispatch({
@@ -1200,7 +1260,7 @@ const CreateQuoteForm = ({ user, quote }) => {
                                     <select
                                         id="location"
                                         name="location"
-                                        defaultValue={state.doorType}
+                                        value={state.doorType}
                                         className="col-start-1 row-start-1 w-full  appearance-none rounded-sm bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6"
                                         onChange={(e) => {
                                             dispatch({
